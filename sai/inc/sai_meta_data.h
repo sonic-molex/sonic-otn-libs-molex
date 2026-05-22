@@ -362,28 +362,41 @@ public:
     sai_int32_t actual_attenuation;
 };
 
-// TODO
-#if 0
 class otn_otdr_obj : public otn_obj
 {
 public:
     otn_otdr_obj(sai_id_map_t &sai_id_map) :
         otn_obj(sai_id_map, SAI_OBJECT_TYPE_OTN_OTDR),
-        distance_range(60), pulse_width(3000), reflect_thr(-40.0),
-        splice_los_thr(0.5), fiber_end_thr(3.0), sample_res(10.0)
+        range_m(60), pulse_width_ns(3000), acquisition_time_s(60),
+        wavelength_mhz(193414489ULL), sampling_resolution_m(1000), negotiation(true),
+        refractive_index(1467900), backscatter_index(-8100),
+        reflectance_threshold(-4000), splice_loss_threshold(35),
+        fiber_end_threshold(300)
     {
     }
 
-    // variable
-    uint32_t distance_range;
-    uint32_t pulse_width;
-    double reflect_thr;
-    double splice_los_thr;
-    double fiber_end_thr;
-    const double sample_res;
+    // CREATE_ONLY identity fields
+    std::string name;
+    std::string parent_port;
 
+    // CREATE_AND_SET scan parameters
+    sai_uint32_t range_m;
+    sai_uint32_t pulse_width_ns;
+    sai_uint32_t acquisition_time_s;
+    sai_uint64_t wavelength_mhz;
+    sai_uint64_t sampling_resolution_m;   // scaled by 100 (e.g. 1000 = 10.00 m)
+
+    // CREATE_AND_SET fiber properties
+    sai_otn_otdr_fiber_type_t  fiber_type;
+    bool         negotiation;
+    sai_int32_t  refractive_index;      // scaled by 1e6 (e.g. 1467900 = 1.4679)
+    sai_int32_t  backscatter_index;     // scaled by 100 (e.g. -8100 = -81.00 dB/km)
+
+    // CREATE_AND_SET detection thresholds
+    sai_int32_t  reflectance_threshold;   // scaled by 100 (e.g. -4000 = -40.00 dB)
+    sai_int32_t  splice_loss_threshold;   // scaled by 100 (e.g. 35 = 0.35 dB)
+    sai_int32_t  fiber_end_threshold;     // scaled by 100 (e.g. 300 = 3.00 dB)
 };
-#endif
 
 class switch_metadata
 { 

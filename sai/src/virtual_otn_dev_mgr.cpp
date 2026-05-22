@@ -54,6 +54,10 @@ sai_status_t virtual_otn_device_manager::create_device(sai_object_id_t object_id
                 g_otn_devices[object_id] = std::make_unique<virtual_otn_wss_device>(object_id, type);
                 break;
 
+            case SAI_OBJECT_TYPE_OTN_OTDR:
+                g_otn_devices[object_id] = std::make_unique<virtual_otn_otdr_device>(object_id, type);
+                break;
+
             default:
                 logger::warn(std::string(__func__) + "Current implementation cant handle object type " + std::to_string(type) );
                 ret_status = SAI_STATUS_NOT_SUPPORTED;

@@ -478,3 +478,85 @@ private:
     sai_otn_wss_ase_status_t attr_ase_status;
     std::unordered_map<sai_object_id_t, std::unique_ptr<virtual_otn_wss_spec_power_entry>> spec_power_entries;
 };
+
+
+// ===================== OTDR Device =====================
+class virtual_otn_otdr_device : public virtual_otn_device {
+public:
+    virtual_otn_otdr_device(sai_object_id_t id, sai_object_type_extensions_t type)
+        : virtual_otn_device(id, type),
+          parent_port(""),
+          range_m(60),
+          pulse_width_ns(3000),
+          acquisition_time_s(60),
+          wavelength_mhz(193414489ULL),
+          sampling_resolution_m(1000),
+          fiber_type(SAI_OTN_OTDR_FIBER_TYPE_SSMF),
+          scan_type(SAI_OTN_OTDR_SCAN_TYPE_CUSTOM),
+          negotiation(true),
+          refractive_index(1467900),
+          backscatter_index(-8100),
+          reflectance_threshold(-4000),
+          splice_loss_threshold(35),
+          fiber_end_threshold(300),
+          scanning_status(SAI_OTN_OTDR_STATUS_IDLE)
+    {
+        logger::debug(std::string(__func__) + ", OTDR Device created with ID " + std::to_string(id));
+    }
+
+    virtual ~virtual_otn_otdr_device() {}
+
+    // Setters
+    void set_parent_port(const std::string& port)     { parent_port = port; }
+    void set_range_m(sai_uint32_t v)                  { range_m = v; }
+    void set_pulse_width_ns(sai_uint32_t v)           { pulse_width_ns = v; }
+    void set_acquisition_time_s(sai_uint32_t v)       { acquisition_time_s = v; }
+    void set_wavelength_mhz(sai_uint64_t v)           { wavelength_mhz = v; }
+    void set_sampling_resolution_m(sai_uint64_t v)    { sampling_resolution_m = v; }
+    void set_fiber_type(sai_otn_otdr_fiber_type_t v)         { fiber_type = v; }
+    void set_scan_type(sai_otn_otdr_scan_type_t v)           { scan_type = v; }
+    void set_negotiation(bool v)                      { negotiation = v; }
+    void set_refractive_index(sai_int32_t v)          { refractive_index = v; }
+    void set_backscatter_index(sai_int32_t v)         { backscatter_index = v; }
+    void set_reflectance_threshold(sai_int32_t v)     { reflectance_threshold = v; }
+    void set_splice_loss_threshold(sai_int32_t v)     { splice_loss_threshold = v; }
+    void set_fiber_end_threshold(sai_int32_t v)       { fiber_end_threshold = v; }
+    void set_scanning_status(sai_otn_otdr_status_t v) { scanning_status = v; }
+
+    // Launch a background scan thread: sleeps acquisition_time_s, copies SOR file, fires ntf_fn
+    void trigger_scan(sai_object_id_t otdr_id, sai_otn_otdr_scan_complete_notification_fn ntf_fn);
+
+    // Getters
+    const std::string& get_parent_port() const        { return parent_port; }
+    sai_uint32_t get_range_m() const                  { return range_m; }
+    sai_uint32_t get_pulse_width_ns() const           { return pulse_width_ns; }
+    sai_uint32_t get_acquisition_time_s() const       { return acquisition_time_s; }
+    sai_uint64_t get_wavelength_mhz() const           { return wavelength_mhz; }
+    sai_uint64_t get_sampling_resolution_m() const          { return sampling_resolution_m; }
+    sai_otn_otdr_fiber_type_t get_fiber_type() const         { return fiber_type; }
+    sai_otn_otdr_scan_type_t get_scan_type() const           { return scan_type; }
+    bool get_negotiation() const                      { return negotiation; }
+    sai_int32_t get_refractive_index() const               { return refractive_index; }
+    sai_int32_t get_backscatter_index() const              { return backscatter_index; }
+    sai_int32_t get_reflectance_threshold() const          { return reflectance_threshold; }
+    sai_int32_t get_splice_loss_threshold() const          { return splice_loss_threshold; }
+    sai_int32_t get_fiber_end_threshold() const            { return fiber_end_threshold; }
+    sai_otn_otdr_status_t get_scanning_status() const          { return scanning_status; }
+
+private:
+    std::string  parent_port;
+    sai_uint32_t range_m;
+    sai_uint32_t pulse_width_ns;
+    sai_uint32_t acquisition_time_s;
+    sai_uint64_t wavelength_mhz;
+    sai_uint64_t sampling_resolution_m;
+    sai_otn_otdr_fiber_type_t  fiber_type;
+    sai_otn_otdr_scan_type_t   scan_type;
+    bool         negotiation;
+    sai_int32_t       refractive_index;
+    sai_int32_t       backscatter_index;
+    sai_int32_t       reflectance_threshold;
+    sai_int32_t       splice_loss_threshold;
+    sai_int32_t       fiber_end_threshold;
+    sai_otn_otdr_status_t scanning_status;   // 0 = idle (simulated)
+};

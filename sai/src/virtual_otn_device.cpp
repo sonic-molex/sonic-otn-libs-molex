@@ -1,5 +1,9 @@
 #include "virtual_otn_device.h"
 #include <cstdlib>
+#include <cstdio>
+#include <thread>
+#include <chrono>
+#include <climits>
 #include "logger.h"
 
 /* OCM Device */
@@ -89,5 +93,76 @@ sai_status_t virtual_otn_wss_device::remove_all_spec_power()
                  std::to_string(spec_power_entries.size()) + ")");
     spec_power_entries.clear();
     return SAI_STATUS_SUCCESS;
+}
+
+
+/* OTDR Device */
+void virtual_otn_otdr_device::trigger_scan(
+        sai_object_id_t otdr_id,
+        sai_otn_otdr_scan_complete_notification_fn ntf_fn)
+{
+    if (get_scanning_status() == SAI_OTN_OTDR_STATUS_MEASURING) {
+        logger::warn("virtual_otn_otdr_device::trigger_scan: scan already in progress, ignoring");
+        return;
+    }
+
+    uint32_t acq_time = get_acquisition_time_s();
+    logger::notice("virtual_otn_otdr_device::trigger_scan: starting scan thread, otdr_id=" +
+                   std::to_string(otdr_id) + " acquisition_time=" + std::to_string(acq_time) + "s");
+
+    set_scanning_status(SAI_OTN_OTDR_STATUS_MEASURING);
+
+    std::thread([this, otdr_id, acq_time, ntf_fn]() {
+        logger::notice("virtual_otn_otdr_device scan thread: sleeping " + std::to_string(acq_time) + "s");
+        std::this_thread::sleep_for(std::chrono::seconds(acq_time));
+        logger::notice("virtual_otn_otdr_device scan thread: awoke, preparing SOR file and result");
+
+        const char *sorSrc = "/host/otn/otdr-sors/.otdr_result.sor";
+        FILE *fdst = fopen(sorSrc, "wb");
+        if (fdst) {
+            fclose(fdst);
+            logger::notice(std::string("virtual_otn_otdr_device scan thread: empty SOR created at ") + sorSrc);
+        } else {
+            logger::warn(std::string("virtual_otn_otdr_device scan thread: cannot create SOR at ") + sorSrc);
+        }
+
+        // Synthetic scan result with 3 events
+        sai_otn_otdr_event_t events[3];
+        events[0].type           = SAI_OTN_OTDR_EVENT_TYPE_REFLECTION;
+        events[0].distance_m     = 0;
+        events[0].loss_db        = 50;      // 0.50 dB
+        events[0].reflection_db  = -1400;   // -14.00 dB
+
+        events[1].type           = SAI_OTN_OTDR_EVENT_TYPE_LOSS;
+        events[1].distance_m     = 25000;
+        events[1].loss_db        = 35;      // 0.35 dB
+        events[1].reflection_db  = -1000;   // -10.00 dB
+
+        events[2].type           = SAI_OTN_OTDR_EVENT_TYPE_END_OF_FIBER;
+        events[2].distance_m     = 50000;
+        events[2].loss_db        = 300;     // 3.00 dB
+        events[2].reflection_db  = -1600;   // -16.00 dB
+
+        sai_otn_otdr_scan_complete_data_t result;
+        result.otdr_id         = otdr_id;
+        result.total_length_m  = 50000;
+        result.total_loss_db   = 1000;   // 10.00 dB
+        result.orl_db          = -3000;  // -30.00 dB
+        result.average_loss_db = 20;     // 0.20 dB/km
+        result.event_count     = 3;
+        result.events          = events;
+
+        set_scanning_status(SAI_OTN_OTDR_STATUS_IDLE);
+        logger::notice("virtual_otn_otdr_device scan thread: status set to IDLE");
+
+        if (ntf_fn) {
+            logger::notice("virtual_otn_otdr_device scan thread: firing scan-complete callback, otdr_id=" +
+                           std::to_string(otdr_id));
+            ntf_fn(1, &result);
+            logger::notice("virtual_otn_otdr_device scan thread: callback returned");
+        } else {
+            logger::warn("virtual_otn_otdr_device scan thread: no callback registered, dropping notification");
+        }
+    }).detach();
 }
 

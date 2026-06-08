@@ -179,8 +179,37 @@ public:
             const sai_attribute_t *attr_list,
             sai_bulk_op_error_mode_t mode,
             sai_status_t *object_statuses);
-#if 0
-    // OTAI OTDR
+    // OTN OTDR scan type
+    static sai_status_t create_otn_otdr_scan_type(
+            sai_object_id_t *otn_otdr_scan_type_id,
+            sai_object_id_t switch_id,
+            uint32_t attr_count,
+            const sai_attribute_t *attr_list);
+    static sai_status_t remove_otn_otdr_scan_type(sai_object_id_t otn_otdr_scan_type_id);
+    static sai_status_t set_otn_otdr_scan_type_attribute(
+            sai_object_id_t otn_otdr_scan_type_id,
+            const sai_attribute_t *attr);
+    static sai_status_t get_otn_otdr_scan_type_attribute(
+            sai_object_id_t otn_otdr_scan_type_id,
+            uint32_t attr_count,
+            sai_attribute_t *attr_list);
+
+    // OTN OTDR fiber profile
+    static sai_status_t create_otn_otdr_fiber_profile(
+            sai_object_id_t *otn_otdr_fiber_profile_id,
+            sai_object_id_t switch_id,
+            uint32_t attr_count,
+            const sai_attribute_t *attr_list);
+    static sai_status_t remove_otn_otdr_fiber_profile(sai_object_id_t otn_otdr_fiber_profile_id);
+    static sai_status_t set_otn_otdr_fiber_profile_attribute(
+            sai_object_id_t otn_otdr_fiber_profile_id,
+            const sai_attribute_t *attr);
+    static sai_status_t get_otn_otdr_fiber_profile_attribute(
+            sai_object_id_t otn_otdr_fiber_profile_id,
+            uint32_t attr_count,
+            sai_attribute_t *attr_list);
+
+    // OTN OTDR
     static sai_status_t create_otn_otdr(
             sai_object_id_t *otn_otdr_id,
             sai_object_id_t switch_id,
@@ -194,7 +223,6 @@ public:
             sai_object_id_t otn_otdr_id,
             uint32_t attr_count,
             sai_attribute_t *attr_list);
-#endif
     // Others
     sai_status_t sai_api_query(sai_api_t sai_api_id, void **api_method_table);
     sai_object_type_t sai_object_type_query(sai_object_id_t);
@@ -216,8 +244,7 @@ public:
     sai_otn_ocm_api_t otn_ocm_api;
     sai_otn_osc_api_t otn_osc_api;
     sai_otn_wss_api_t otn_wss_api;
-    // TODO
-    //sai_otn_otdr_api_t otn_otdr_api;
+    sai_otn_otdr_api_t otn_otdr_api;
 
 private:
     static sai_status_t init_switch();
@@ -244,6 +271,7 @@ private:
     static sai_status_t hal_set_otdr_param(uint32_t dev, uint32_t distance_range, uint32_t pulse_width, double sample_res);
     static sai_status_t hal_set_otdr_thr(uint32_t dev, double reflect_thr, double splice_los_thr, double fiber_end_thr);
     static sai_status_t hal_set_otdr_time(uint32_t dev, uint32_t time);
+    static sai_status_t hal_set_otdr_ior(uint32_t dev, double ior);
 
     static void send_alarm_event_data(
             sai_object_id_t object_id,

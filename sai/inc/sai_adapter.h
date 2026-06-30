@@ -14,6 +14,10 @@ extern "C" {
 // LOG
 #include "logger.h"
 
+// forward declarations; full definitions in virtual_otn_device.h
+class virtual_otn_device;
+class virtual_otn_wss_device;
+
 
 #define CHECK_SWITCH_ID(id) \
 do {\
@@ -246,6 +250,16 @@ public:
     sai_otn_wss_api_t otn_wss_api;
     sai_otn_otdr_api_t otn_otdr_api;
 
+    /* Report an environmental / HAL alarm that has no SAI object of its own
+     * (fan, temperature, power supply, ...). Routes through the normal SAI
+     * alarm-notification path (send_alarm_event_data -> syncd -> orchagent ->
+     * eventd) using the switch object as the resource. 'event_name' must be
+     * registered in the eventd profile (device default.json). */
+    static void report_hal_alarm(const std::string& event_name,
+                                 sai_otn_alarm_severity_t severity,
+                                 sai_otn_alarm_action_t action,
+                                 const std::string& description);
+
 private:
     static sai_status_t init_switch();
     static sai_status_t fetch_ocm_data(otn_ocm_obj *obj);
@@ -280,6 +294,25 @@ private:
             std::string& event_name,
             std::string& description,
             std::vector<uint8_t>& raw_data);
+
+    /* Edge-detecting alarm trigger. Emits a single RAISE when 'active' first
+     * becomes true and a single CLEAR when it returns to false, using the
+     * device's active-alarm set. 'event_name' must be registered in the eventd
+     * profile (device default.json) or eventd drops it. */
+    static void evaluate_alarm(
+            virtual_otn_device* dev,
+            sai_object_id_t object_id,
+            const std::string& event_name,
+            sai_otn_alarm_severity_t severity,
+            bool active,
+            const std::string& description,
+            std::vector<uint8_t>& raw_data);
+
+    /* Re-evaluate the WSS media-channel frequency-range alarm (lower < upper).
+     * Called whenever either bound changes so a later valid pair CLEARs it. */
+    static void check_wss_frequency_alarm(
+            virtual_otn_wss_device* wss_dev,
+            sai_object_id_t object_id);
 
     std::vector<sai_object_id_t> obj_list;
     switch_metadata metadata;

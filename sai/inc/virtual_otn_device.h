@@ -1,7 +1,8 @@
 #pragma once
 
 #include <string>
-#include <memory> 
+#include <memory>
+#include <set>
 #include <unordered_map>
 #include <saiextensions.h>
 #include "logger.h"
@@ -15,7 +16,7 @@ public:
           signal_present(false),
           en_sai_object_type(sai_object_type)
     {
-        logger::debug(std::string(__func__) + ", sai_id " + std::to_string(sai_object_id) + 
+        logger::debug(std::string(__func__) + ", sai_id " + std::to_string(sai_object_id) +
         ", sai_type " + std::to_string(sai_object_type));
     }
 
@@ -27,15 +28,24 @@ public:
 
     void set_name(const std::string& name) { attr_name = name; }
     const std::string& get_name() const { return attr_name; }
-    
+
+    /* Active-alarm tracking for RAISE/CLEAR edge detection.
+     * HAL/device alarm conditions are level/state (active or not); eventd wants
+     * edges. These let a trigger point emit exactly one RAISE on 0->1 and one
+     * CLEAR on 1->0 instead of re-raising on every config write. */
+    bool raise_alarm(const std::string& name) { return active_alarms.insert(name).second; }
+    bool clear_alarm(const std::string& name) { return active_alarms.erase(name) > 0; }
+    bool is_alarm_active(const std::string& name) const { return active_alarms.count(name) > 0; }
+
     virtual ~virtual_otn_device() {}
 
 private:
     sai_object_id_t sai_object_id;
     bool enabled;
-    bool signal_present;  
+    bool signal_present;
     sai_object_type_extensions_t  en_sai_object_type;
     std::string attr_name;
+    std::set<std::string> active_alarms;
 
 };
 

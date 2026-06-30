@@ -1,4 +1,5 @@
 #include "sai_adapter.h"
+#include "hal_event_listener.h"
 #include <sstream>
 #include <iomanip>
 
@@ -46,6 +47,11 @@ sai_adapter::init_switch()
 
     switch_metadata_ptr->switch_id = switch_obj->sai_object_id;
     switch_list_ptr->push_back(switch_obj->sai_object_id);
+
+    /* Start listening for HAL events (fan/temp/psu, ...) now that the switch
+     * object exists; received events become alarms via report_hal_alarm. */
+    hal_listener::start_listener();
+
     return SAI_STATUS_SUCCESS;
 }
 

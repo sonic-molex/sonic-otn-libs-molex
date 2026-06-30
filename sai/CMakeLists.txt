@@ -47,6 +47,7 @@ add_library(${TARGET} SHARED ${SRC_DIR}/logger.cpp
                              ${SRC_DIR}/sai_adapter_interface.cpp
                              ${SRC_DIR}/virtual_otn_device.cpp
                              ${SRC_DIR}/virtual_otn_dev_mgr.cpp
+                             ${SRC_DIR}/hal_event_listener.cpp
                              ${SRC_DIR}/sai.c)
 
 
@@ -55,10 +56,15 @@ target_link_libraries(${TARGET} pthread)
 add_executable(${TEST} ${CMAKE_SOURCE_DIR}/test/test.cpp)
 target_link_libraries(${TEST} sai)
 
+# HAL-event injector: stand-in for the HAL event source on otn-kvm (the real HAL
+# emits these on hardware). Independent of libsai-otn; shares only the wire
+# contract in inc/hal_event.h.
+add_executable(hal-event-generator ${CMAKE_SOURCE_DIR}/test/hal_event_generator.cpp)
+
 
 #debian
 set(MAJAR_VERSION 1)
-set(MINOR_VERSION 5)
+set(MINOR_VERSION 6)
 set(PATCH_VERSION 0)
 set(CPACK_GENERATOR "DEB")
 set(CPACK_PACKAGE_VERSION_MAJOR "${MAJAR_VERSION}")
@@ -78,5 +84,8 @@ install(TARGETS ${TARGET}
         PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ GROUP_EXECUTE GROUP_WRITE GROUP_READ WORLD_EXECUTE WORLD_WRITE WORLD_READ
         DESTINATION /usr/lib/x86_64-linux-gnu)
 install(TARGETS ${TEST}
+        PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ GROUP_EXECUTE GROUP_WRITE GROUP_READ WORLD_EXECUTE WORLD_WRITE WORLD_READ
+        DESTINATION /usr/local/bin)
+install(TARGETS hal-event-generator
         PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ GROUP_EXECUTE GROUP_WRITE GROUP_READ WORLD_EXECUTE WORLD_WRITE WORLD_READ
         DESTINATION /usr/local/bin)

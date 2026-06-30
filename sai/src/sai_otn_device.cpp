@@ -1,5 +1,6 @@
 #include "sai_adapter.h"
 #include "virtual_otn_dev_mgr.h"
+#include "virtual_otn_device.h"
 
 // OTN device
 sai_status_t
@@ -110,4 +111,57 @@ sai_adapter::send_alarm_event_data(
     alarm_data.timestamp.tv_nsec = (uint32_t)ts.tv_nsec;
 
     switch_metadata_ptr->otn_alarm_event_ntf(1, &alarm_data);
+}
+
+void
+sai_adapter::report_hal_alarm(
+        const std::string& event_name,
+        sai_otn_alarm_severity_t severity,
+        sai_otn_alarm_action_t action,
+        const std::string& description)
+{
+    /* Environmental/HAL alarms have no SAI object; use the switch object as the
+     * resource. The HAL event already states RAISE vs CLEAR, so emit directly
+     * (no edge detection). */
+    std::string name = event_name;
+    std::string desc = description;
+    std::vector<uint8_t> raw_data;
+    send_alarm_event_data(switch_metadata_ptr->switch_id, severity, action, name, desc, raw_data);
+}
+
+void
+sai_adapter::evaluate_alarm(
+        virtual_otn_device* dev,
+        sai_object_id_t object_id,
+        const std::string& event_name,
+        sai_otn_alarm_severity_t severity,
+        bool active,
+        const std::string& description,
+        std::vector<uint8_t>& raw_data)
+{
+    if (!dev) {
+        logger::warn(std::string(__func__) + ", null device for " + event_name);
+        return;
+    }
+
+    /* send_alarm_event_data takes non-const refs; copy so callers can pass
+     * temporaries/const strings. */
+    std::string name = event_name;
+    std::string desc = description;
+
+    if (active) {
+        /* raise_alarm returns true only on the 0->1 edge */
+        if (dev->raise_alarm(event_name)) {
+            logger::notice(std::string(__func__) + ", RAISE " + event_name +
+                           " on object " + std::to_string(object_id));
+            send_alarm_event_data(object_id, severity, SAI_OTN_ALARM_ACTION_RAISE, name, desc, raw_data);
+        }
+    } else {
+        /* clear_alarm returns true only when it was previously active (1->0) */
+        if (dev->clear_alarm(event_name)) {
+            logger::notice(std::string(__func__) + ", CLEAR " + event_name +
+                           " on object " + std::to_string(object_id));
+            send_alarm_event_data(object_id, severity, SAI_OTN_ALARM_ACTION_CLEAR, name, desc, raw_data);
+        }
+    }
 }

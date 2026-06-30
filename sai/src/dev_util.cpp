@@ -22,6 +22,7 @@ std::map<std::string, uint32_t> dev_util::dev_map = {
     // OCM
     {"OCM0", DEV_TYPE_OCM},
     {"OCM1", DEV_TYPE_P_OCM},
+    
 
     // OSC
     {"OSC0-0", DEV_TYPE_BA},
@@ -35,8 +36,9 @@ std::map<std::string, uint32_t> dev_util::dev_map = {
 
     // WSS
     {"LineIn0", DEV_TYPE_WSS},
-    {"LineIn1", DEV_TYPE_WSS},
-    {"LineIn2", DEV_TYPE_WSS1},
+    {"LineIn1", DEV_TYPE_WSS1},
+    {"LineIn2", DEV_TYPE_WSS2},
+    {"LineIn3", DEV_TYPE_WSS3}
 
 };
 

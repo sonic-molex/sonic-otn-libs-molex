@@ -164,6 +164,7 @@ enum EDevType
     DEV_TYPE_WSS,
     DEV_TYPE_WSS1,
     DEV_TYPE_WSS2,
+    DEV_TYPE_WSS3,
 
     /* OCM */
     DEV_TYPE_OCM,

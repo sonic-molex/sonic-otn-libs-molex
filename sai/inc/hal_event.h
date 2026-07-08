@@ -9,8 +9,10 @@
  * alarm through the normal SAI alarm-notification path.
  *
  * Framed envelope:  [ hal_msg_header (32 B) ][ payload ][ checksum (1 B) ]
- * Multi-byte header fields are network byte order. The checksum byte is
- * reserved but not yet computed/validated.
+ * Multi-byte header fields are network byte order. The trailing checksum byte is
+ * computed and validated (see hal_msg_checksum) using Shasta's __UTIL_CalcMsgSum
+ * algorithm, so the header + checksum framing is byte-compatible with a Shasta
+ * OOP message (ST_OOP_MSG_HEADER, OID DEF_OID_DEV_EVENT).
  */
 
 #ifdef __cplusplus
@@ -40,16 +42,35 @@ typedef struct {
     uint8_t  rsvd[HAL_MSG_HDR_RSVD_LEN];
 } hal_msg_header;
 
-/* dev-event payload: self-describing so the receiver needs no device lookup.
- *   event_id : which condition (maps to an alarm in libsai-otn's catalog)
- *   instance : affected unit index (e.g. fan/psu number)
- *   action   : 1 = RAISE, 0 = CLEAR
+/* dev-event payload -- byte-compatible with Shasta's DEV_EVENT payload
+ * (util-lib-cpp/util_event.cpp Event::event_send): two native-order ints.
+ * Shasta convention:
+ *   event_id     : which alarm AND raise-vs-clear -- raise and clear are DISTINCT
+ *                  event ids (e.g. DEF_EVENT_ID_OA_COMM_FAIL / _CLEAR_OA_COMM_FAIL).
+ *                  Mapped to an alarm by the catalog (otn_alarm_catalog.json).
+ *   sub_event_id : the affected instance -- fan/psu/sensor number, or the optical
+ *                  object index. (No action bit; action is carried by event_id.)
  */
 struct hal_event {
     int event_id;
-    int instance;
-    int action;
+    int sub_event_id;
 };
+
+/* Frame checksum: 0xFF minus the 8-bit running sum of every byte preceding the
+ * trailing checksum byte (i.e. the header + payload). Byte-for-byte identical to
+ * Shasta's __UTIL_CalcMsgSum (util-lib/util_msg.c), so the sender/receiver here
+ * and a genuine Shasta OOP frame validate each other. Sender writes it as the
+ * final byte; receiver recomputes over (frame_len - 1) and compares. */
+static inline uint8_t hal_msg_checksum(const void *buf, unsigned int len)
+{
+    const unsigned char *p = (const unsigned char *)buf;
+    uint8_t sum = 0;
+    unsigned int i;
+    for (i = 0; i < len; ++i) {
+        sum = (uint8_t)(sum + p[i]);
+    }
+    return (uint8_t)(0xFF - sum);
+}
 
 #ifdef __cplusplus
 }

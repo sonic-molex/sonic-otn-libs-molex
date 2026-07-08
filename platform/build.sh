@@ -7,8 +7,8 @@ SONIC_PLATFORM="otn-$KVM_PLATFORM"
 SONIC_DEVICE='OLS-V'
 
 
-BUILD_DIRS=(./HalPlatformApiServer )
-BUILD_TARS=('HalPlatformApiServer HalPlatformApiTest')
+BUILD_DIRS=(./HalPlatformApiServer ./OtnVirtualHal )
+BUILD_TARS=('HalPlatformApiServer HalPlatformApiTest' 'otn-vhal')
 
 
 ####  check execute result

@@ -130,6 +130,32 @@ sai_adapter::report_hal_alarm(
 }
 
 void
+sai_adapter::report_hal_object_alarm(
+        sai_object_type_extensions_t obj_type, int index,
+        const std::string& event_name,
+        sai_otn_alarm_severity_t severity,
+        sai_otn_alarm_action_t action,
+        const std::string& description)
+{
+    /* Object-bound HAL alarm: resolve the index-th SAI object of this type so the
+     * alarm attaches to it (orchagent maps object_id -> the real resource name,
+     * e.g. "OA0-1"). The HAL event states RAISE vs CLEAR, so emit directly. */
+    auto& mgr = virtual_otn_device_manager::instance();
+    sai_object_id_t oid = mgr.get_object_id_by_type_index(obj_type, index);
+    if (oid == SAI_NULL_OBJECT_ID) {
+        logger::warn(std::string(__func__) + ", no SAI object of type " +
+                     std::to_string(obj_type) + " at index " + std::to_string(index) +
+                     " for alarm " + event_name);
+        return;
+    }
+
+    std::string name = event_name;
+    std::string desc = description;
+    std::vector<uint8_t> raw_data;
+    send_alarm_event_data(oid, severity, action, name, desc, raw_data);
+}
+
+void
 sai_adapter::evaluate_alarm(
         virtual_otn_device* dev,
         sai_object_id_t object_id,

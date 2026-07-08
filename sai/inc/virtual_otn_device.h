@@ -29,6 +29,8 @@ public:
     void set_name(const std::string& name) { attr_name = name; }
     const std::string& get_name() const { return attr_name; }
 
+    sai_object_type_extensions_t get_sai_object_type() const { return en_sai_object_type; }
+
     /* Active-alarm tracking for RAISE/CLEAR edge detection.
      * HAL/device alarm conditions are level/state (active or not); eventd wants
      * edges. These let a trigger point emit exactly one RAISE on 0->1 and one

@@ -260,6 +260,17 @@ public:
                                  sai_otn_alarm_action_t action,
                                  const std::string& description);
 
+    /* Report an object-bound HAL alarm. Resolves the index-th SAI object of
+     * 'obj_type' (via virtual_otn_device_manager, ordered by name) and emits
+     * against its object_id, so orchagent maps it to the object's real resource
+     * name (e.g. "OA0-1"). No-op with a warning if there is no such object.
+     * 'event_name' must be registered in the eventd profile (device default.json). */
+    static void report_hal_object_alarm(sai_object_type_extensions_t obj_type, int index,
+                                        const std::string& event_name,
+                                        sai_otn_alarm_severity_t severity,
+                                        sai_otn_alarm_action_t action,
+                                        const std::string& description);
+
 private:
     static sai_status_t init_switch();
     static sai_status_t fetch_ocm_data(otn_ocm_obj *obj);

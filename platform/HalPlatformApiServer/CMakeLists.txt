@@ -22,7 +22,7 @@ add_executable (${SERVER}       Convert.cpp
                                 virtual_platform.h
                                 logger.cpp)
 
-target_link_libraries (${SERVER} halapi oplkutil pthread thrift)
+target_link_libraries (${SERVER} pthread thrift)
 
 
 add_executable (${CLIENT}       HalPlatformApi.cpp

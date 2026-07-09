@@ -115,6 +115,11 @@ sai_adapter::create_otn_wss(sai_object_id_t *otn_wss_id,
         }
     }
 
+    std::unordered_map<std::string, otn_threshold_range_t> threshold_ranges;
+    if (otn_threshold_config::instance().get_threshold_map(obj->dev_name, threshold_ranges)) {
+        mgr.set_threshold_ranges(obj->sai_object_id, obj->dev_type, threshold_ranges);
+    }
+
     return SAI_STATUS_SUCCESS;
 }
 

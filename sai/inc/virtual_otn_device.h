@@ -5,6 +5,7 @@
 #include <set>
 #include <unordered_map>
 #include <saiextensions.h>
+#include "otn_threshold_config.h"
 #include "logger.h"
 
 /* Base class for Virtual OTN device */
@@ -30,6 +31,7 @@ public:
     const std::string& get_name() const { return attr_name; }
 
     sai_object_type_extensions_t get_sai_object_type() const { return en_sai_object_type; }
+    virtual sai_status_t set_threshold_ranges(uint32_t device_type, std::unordered_map<std::string, otn_threshold_range_t>& threshold_ranges);
 
     /* Active-alarm tracking for RAISE/CLEAR edge detection.
      * HAL/device alarm conditions are level/state (active or not); eventd wants

@@ -1,0 +1,1 @@
+/usr/bin/c++  -std=c++20 -fvisibility=hidden -Wall -Werror CMakeFiles/sai_test.dir/test/test.cpp.o -o sai_test  -Wl,-rpath,/home/jichend/sonic/OLS/sonic-otn-libs/sai/build: libsai.so -lpthread 

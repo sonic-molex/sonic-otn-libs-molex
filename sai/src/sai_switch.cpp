@@ -1,5 +1,6 @@
 #include "sai_adapter.h"
 #include "hal_event_listener.h"
+#include "otn_threshold_config.h"
 #include <sstream>
 #include <iomanip>
 
@@ -51,6 +52,10 @@ sai_adapter::init_switch()
     /* Start listening for HAL events (fan/temp/psu, ...) now that the switch
      * object exists; received events become alarms via report_hal_alarm. */
     hal_listener::start_listener();
+    // Load device-global optical thresholds from the file referenced by the
+    // SAI_OTN_THRESHOLD_FILE key in sai.profile. Parsed once here at switch
+    // bring-up; values are cached in otn_threshold_config for later use.
+    otn_threshold_config::instance().load();
 
     return SAI_STATUS_SUCCESS;
 }

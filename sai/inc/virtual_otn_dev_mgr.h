@@ -13,6 +13,7 @@ public:
     // Factory functions
     sai_status_t create_device(sai_object_id_t object_id, sai_object_type_extensions_t type);
     sai_status_t delete_device(sai_object_id_t object_id);
+    sai_status_t set_threshold_ranges(sai_object_id_t object_id, uint32_t device_type, std::unordered_map<std::string, otn_threshold_range_t>& threshold_ranges);
 
     // Base getter
     virtual_otn_device* get_device_base(sai_object_id_t object_id);

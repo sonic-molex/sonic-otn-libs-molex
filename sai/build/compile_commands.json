@@ -1,0 +1,134 @@
+[
+{
+  "directory": "/home/jichend/sonic/OLS/sonic-otn-libs/sai/build",
+  "command": "/usr/bin/c++ -Dsai_EXPORTS -I/home/jichend/sonic/OLS/sonic-otn-libs/sai/inc -I/home/jichend/sonic/OLS/sonic-buildimage-molex/src/sonic-sairedis/SAI/inc -I/home/jichend/sonic/OLS/sonic-buildimage-molex/src/sonic-sairedis/SAI/experimental -I/home/jichend/sonic/OLS/sonic-otn-libs/sai/build  -std=c++20 -fvisibility=hidden -Wall -Werror -fPIC -o CMakeFiles/sai.dir/src/logger.cpp.o -c /home/jichend/sonic/OLS/sonic-otn-libs/sai/src/logger.cpp",
+  "file": "/home/jichend/sonic/OLS/sonic-otn-libs/sai/src/logger.cpp",
+  "output": "CMakeFiles/sai.dir/src/logger.cpp.o"
+},
+{
+  "directory": "/home/jichend/sonic/OLS/sonic-otn-libs/sai/build",
+  "command": "/usr/bin/c++ -Dsai_EXPORTS -I/home/jichend/sonic/OLS/sonic-otn-libs/sai/inc -I/home/jichend/sonic/OLS/sonic-buildimage-molex/src/sonic-sairedis/SAI/inc -I/home/jichend/sonic/OLS/sonic-buildimage-molex/src/sonic-sairedis/SAI/experimental -I/home/jichend/sonic/OLS/sonic-otn-libs/sai/build  -std=c++20 -fvisibility=hidden -Wall -Werror -fPIC -o CMakeFiles/sai.dir/src/dev_util.cpp.o -c /home/jichend/sonic/OLS/sonic-otn-libs/sai/src/dev_util.cpp",
+  "file": "/home/jichend/sonic/OLS/sonic-otn-libs/sai/src/dev_util.cpp",
+  "output": "CMakeFiles/sai.dir/src/dev_util.cpp.o"
+},
+{
+  "directory": "/home/jichend/sonic/OLS/sonic-otn-libs/sai/build",
+  "command": "/usr/bin/c++ -Dsai_EXPORTS -I/home/jichend/sonic/OLS/sonic-otn-libs/sai/inc -I/home/jichend/sonic/OLS/sonic-buildimage-molex/src/sonic-sairedis/SAI/inc -I/home/jichend/sonic/OLS/sonic-buildimage-molex/src/sonic-sairedis/SAI/experimental -I/home/jichend/sonic/OLS/sonic-otn-libs/sai/build  -std=c++20 -fvisibility=hidden -Wall -Werror -fPIC -o CMakeFiles/sai.dir/src/sai_meta_data.cpp.o -c /home/jichend/sonic/OLS/sonic-otn-libs/sai/src/sai_meta_data.cpp",
+  "file": "/home/jichend/sonic/OLS/sonic-otn-libs/sai/src/sai_meta_data.cpp",
+  "output": "CMakeFiles/sai.dir/src/sai_meta_data.cpp.o"
+},
+{
+  "directory": "/home/jichend/sonic/OLS/sonic-otn-libs/sai/build",
+  "command": "/usr/bin/c++ -Dsai_EXPORTS -I/home/jichend/sonic/OLS/sonic-otn-libs/sai/inc -I/home/jichend/sonic/OLS/sonic-buildimage-molex/src/sonic-sairedis/SAI/inc -I/home/jichend/sonic/OLS/sonic-buildimage-molex/src/sonic-sairedis/SAI/experimental -I/home/jichend/sonic/OLS/sonic-otn-libs/sai/build  -std=c++20 -fvisibility=hidden -Wall -Werror -fPIC -o CMakeFiles/sai.dir/src/sai_router_if.cpp.o -c /home/jichend/sonic/OLS/sonic-otn-libs/sai/src/sai_router_if.cpp",
+  "file": "/home/jichend/sonic/OLS/sonic-otn-libs/sai/src/sai_router_if.cpp",
+  "output": "CMakeFiles/sai.dir/src/sai_router_if.cpp.o"
+},
+{
+  "directory": "/home/jichend/sonic/OLS/sonic-otn-libs/sai/build",
+  "command": "/usr/bin/c++ -Dsai_EXPORTS -I/home/jichend/sonic/OLS/sonic-otn-libs/sai/inc -I/home/jichend/sonic/OLS/sonic-buildimage-molex/src/sonic-sairedis/SAI/inc -I/home/jichend/sonic/OLS/sonic-buildimage-molex/src/sonic-sairedis/SAI/experimental -I/home/jichend/sonic/OLS/sonic-otn-libs/sai/build  -std=c++20 -fvisibility=hidden -Wall -Werror -fPIC -o CMakeFiles/sai.dir/src/sai_switch.cpp.o -c /home/jichend/sonic/OLS/sonic-otn-libs/sai/src/sai_switch.cpp",
+  "file": "/home/jichend/sonic/OLS/sonic-otn-libs/sai/src/sai_switch.cpp",
+  "output": "CMakeFiles/sai.dir/src/sai_switch.cpp.o"
+},
+{
+  "directory": "/home/jichend/sonic/OLS/sonic-otn-libs/sai/build",
+  "command": "/usr/bin/c++ -Dsai_EXPORTS -I/home/jichend/sonic/OLS/sonic-otn-libs/sai/inc -I/home/jichend/sonic/OLS/sonic-buildimage-molex/src/sonic-sairedis/SAI/inc -I/home/jichend/sonic/OLS/sonic-buildimage-molex/src/sonic-sairedis/SAI/experimental -I/home/jichend/sonic/OLS/sonic-otn-libs/sai/build  -std=c++20 -fvisibility=hidden -Wall -Werror -fPIC -o CMakeFiles/sai.dir/src/sai_otn_device.cpp.o -c /home/jichend/sonic/OLS/sonic-otn-libs/sai/src/sai_otn_device.cpp",
+  "file": "/home/jichend/sonic/OLS/sonic-otn-libs/sai/src/sai_otn_device.cpp",
+  "output": "CMakeFiles/sai.dir/src/sai_otn_device.cpp.o"
+},
+{
+  "directory": "/home/jichend/sonic/OLS/sonic-otn-libs/sai/build",
+  "command": "/usr/bin/c++ -Dsai_EXPORTS -I/home/jichend/sonic/OLS/sonic-otn-libs/sai/inc -I/home/jichend/sonic/OLS/sonic-buildimage-molex/src/sonic-sairedis/SAI/inc -I/home/jichend/sonic/OLS/sonic-buildimage-molex/src/sonic-sairedis/SAI/experimental -I/home/jichend/sonic/OLS/sonic-otn-libs/sai/build  -std=c++20 -fvisibility=hidden -Wall -Werror -fPIC -o CMakeFiles/sai.dir/src/sai_otn_attenuator.cpp.o -c /home/jichend/sonic/OLS/sonic-otn-libs/sai/src/sai_otn_attenuator.cpp",
+  "file": "/home/jichend/sonic/OLS/sonic-otn-libs/sai/src/sai_otn_attenuator.cpp",
+  "output": "CMakeFiles/sai.dir/src/sai_otn_attenuator.cpp.o"
+},
+{
+  "directory": "/home/jichend/sonic/OLS/sonic-otn-libs/sai/build",
+  "command": "/usr/bin/c++ -Dsai_EXPORTS -I/home/jichend/sonic/OLS/sonic-otn-libs/sai/inc -I/home/jichend/sonic/OLS/sonic-buildimage-molex/src/sonic-sairedis/SAI/inc -I/home/jichend/sonic/OLS/sonic-buildimage-molex/src/sonic-sairedis/SAI/experimental -I/home/jichend/sonic/OLS/sonic-otn-libs/sai/build  -std=c++20 -fvisibility=hidden -Wall -Werror -fPIC -o CMakeFiles/sai.dir/src/sai_otn_oa.cpp.o -c /home/jichend/sonic/OLS/sonic-otn-libs/sai/src/sai_otn_oa.cpp",
+  "file": "/home/jichend/sonic/OLS/sonic-otn-libs/sai/src/sai_otn_oa.cpp",
+  "output": "CMakeFiles/sai.dir/src/sai_otn_oa.cpp.o"
+},
+{
+  "directory": "/home/jichend/sonic/OLS/sonic-otn-libs/sai/build",
+  "command": "/usr/bin/c++ -Dsai_EXPORTS -I/home/jichend/sonic/OLS/sonic-otn-libs/sai/inc -I/home/jichend/sonic/OLS/sonic-buildimage-molex/src/sonic-sairedis/SAI/inc -I/home/jichend/sonic/OLS/sonic-buildimage-molex/src/sonic-sairedis/SAI/experimental -I/home/jichend/sonic/OLS/sonic-otn-libs/sai/build  -std=c++20 -fvisibility=hidden -Wall -Werror -fPIC -o CMakeFiles/sai.dir/src/sai_otn_ocm.cpp.o -c /home/jichend/sonic/OLS/sonic-otn-libs/sai/src/sai_otn_ocm.cpp",
+  "file": "/home/jichend/sonic/OLS/sonic-otn-libs/sai/src/sai_otn_ocm.cpp",
+  "output": "CMakeFiles/sai.dir/src/sai_otn_ocm.cpp.o"
+},
+{
+  "directory": "/home/jichend/sonic/OLS/sonic-otn-libs/sai/build",
+  "command": "/usr/bin/c++ -Dsai_EXPORTS -I/home/jichend/sonic/OLS/sonic-otn-libs/sai/inc -I/home/jichend/sonic/OLS/sonic-buildimage-molex/src/sonic-sairedis/SAI/inc -I/home/jichend/sonic/OLS/sonic-buildimage-molex/src/sonic-sairedis/SAI/experimental -I/home/jichend/sonic/OLS/sonic-otn-libs/sai/build  -std=c++20 -fvisibility=hidden -Wall -Werror -fPIC -o CMakeFiles/sai.dir/src/sai_otn_osc.cpp.o -c /home/jichend/sonic/OLS/sonic-otn-libs/sai/src/sai_otn_osc.cpp",
+  "file": "/home/jichend/sonic/OLS/sonic-otn-libs/sai/src/sai_otn_osc.cpp",
+  "output": "CMakeFiles/sai.dir/src/sai_otn_osc.cpp.o"
+},
+{
+  "directory": "/home/jichend/sonic/OLS/sonic-otn-libs/sai/build",
+  "command": "/usr/bin/c++ -Dsai_EXPORTS -I/home/jichend/sonic/OLS/sonic-otn-libs/sai/inc -I/home/jichend/sonic/OLS/sonic-buildimage-molex/src/sonic-sairedis/SAI/inc -I/home/jichend/sonic/OLS/sonic-buildimage-molex/src/sonic-sairedis/SAI/experimental -I/home/jichend/sonic/OLS/sonic-otn-libs/sai/build  -std=c++20 -fvisibility=hidden -Wall -Werror -fPIC -o CMakeFiles/sai.dir/src/sai_otn_wss.cpp.o -c /home/jichend/sonic/OLS/sonic-otn-libs/sai/src/sai_otn_wss.cpp",
+  "file": "/home/jichend/sonic/OLS/sonic-otn-libs/sai/src/sai_otn_wss.cpp",
+  "output": "CMakeFiles/sai.dir/src/sai_otn_wss.cpp.o"
+},
+{
+  "directory": "/home/jichend/sonic/OLS/sonic-otn-libs/sai/build",
+  "command": "/usr/bin/c++ -Dsai_EXPORTS -I/home/jichend/sonic/OLS/sonic-otn-libs/sai/inc -I/home/jichend/sonic/OLS/sonic-buildimage-molex/src/sonic-sairedis/SAI/inc -I/home/jichend/sonic/OLS/sonic-buildimage-molex/src/sonic-sairedis/SAI/experimental -I/home/jichend/sonic/OLS/sonic-otn-libs/sai/build  -std=c++20 -fvisibility=hidden -Wall -Werror -fPIC -o CMakeFiles/sai.dir/src/sai_otn_otdr.cpp.o -c /home/jichend/sonic/OLS/sonic-otn-libs/sai/src/sai_otn_otdr.cpp",
+  "file": "/home/jichend/sonic/OLS/sonic-otn-libs/sai/src/sai_otn_otdr.cpp",
+  "output": "CMakeFiles/sai.dir/src/sai_otn_otdr.cpp.o"
+},
+{
+  "directory": "/home/jichend/sonic/OLS/sonic-otn-libs/sai/build",
+  "command": "/usr/bin/c++ -Dsai_EXPORTS -I/home/jichend/sonic/OLS/sonic-otn-libs/sai/inc -I/home/jichend/sonic/OLS/sonic-buildimage-molex/src/sonic-sairedis/SAI/inc -I/home/jichend/sonic/OLS/sonic-buildimage-molex/src/sonic-sairedis/SAI/experimental -I/home/jichend/sonic/OLS/sonic-otn-libs/sai/build  -std=c++20 -fvisibility=hidden -Wall -Werror -fPIC -o CMakeFiles/sai.dir/src/sai_otn_otdr_scan_type.cpp.o -c /home/jichend/sonic/OLS/sonic-otn-libs/sai/src/sai_otn_otdr_scan_type.cpp",
+  "file": "/home/jichend/sonic/OLS/sonic-otn-libs/sai/src/sai_otn_otdr_scan_type.cpp",
+  "output": "CMakeFiles/sai.dir/src/sai_otn_otdr_scan_type.cpp.o"
+},
+{
+  "directory": "/home/jichend/sonic/OLS/sonic-otn-libs/sai/build",
+  "command": "/usr/bin/c++ -Dsai_EXPORTS -I/home/jichend/sonic/OLS/sonic-otn-libs/sai/inc -I/home/jichend/sonic/OLS/sonic-buildimage-molex/src/sonic-sairedis/SAI/inc -I/home/jichend/sonic/OLS/sonic-buildimage-molex/src/sonic-sairedis/SAI/experimental -I/home/jichend/sonic/OLS/sonic-otn-libs/sai/build  -std=c++20 -fvisibility=hidden -Wall -Werror -fPIC -o CMakeFiles/sai.dir/src/otdr_static_config.cpp.o -c /home/jichend/sonic/OLS/sonic-otn-libs/sai/src/otdr_static_config.cpp",
+  "file": "/home/jichend/sonic/OLS/sonic-otn-libs/sai/src/otdr_static_config.cpp",
+  "output": "CMakeFiles/sai.dir/src/otdr_static_config.cpp.o"
+},
+{
+  "directory": "/home/jichend/sonic/OLS/sonic-otn-libs/sai/build",
+  "command": "/usr/bin/c++ -Dsai_EXPORTS -I/home/jichend/sonic/OLS/sonic-otn-libs/sai/inc -I/home/jichend/sonic/OLS/sonic-buildimage-molex/src/sonic-sairedis/SAI/inc -I/home/jichend/sonic/OLS/sonic-buildimage-molex/src/sonic-sairedis/SAI/experimental -I/home/jichend/sonic/OLS/sonic-otn-libs/sai/build  -std=c++20 -fvisibility=hidden -Wall -Werror -fPIC -o CMakeFiles/sai.dir/src/otn_threshold_config.cpp.o -c /home/jichend/sonic/OLS/sonic-otn-libs/sai/src/otn_threshold_config.cpp",
+  "file": "/home/jichend/sonic/OLS/sonic-otn-libs/sai/src/otn_threshold_config.cpp",
+  "output": "CMakeFiles/sai.dir/src/otn_threshold_config.cpp.o"
+},
+{
+  "directory": "/home/jichend/sonic/OLS/sonic-otn-libs/sai/build",
+  "command": "/usr/bin/c++ -Dsai_EXPORTS -I/home/jichend/sonic/OLS/sonic-otn-libs/sai/inc -I/home/jichend/sonic/OLS/sonic-buildimage-molex/src/sonic-sairedis/SAI/inc -I/home/jichend/sonic/OLS/sonic-buildimage-molex/src/sonic-sairedis/SAI/experimental -I/home/jichend/sonic/OLS/sonic-otn-libs/sai/build  -std=c++20 -fvisibility=hidden -Wall -Werror -fPIC -o CMakeFiles/sai.dir/src/sai_adapter.cpp.o -c /home/jichend/sonic/OLS/sonic-otn-libs/sai/src/sai_adapter.cpp",
+  "file": "/home/jichend/sonic/OLS/sonic-otn-libs/sai/src/sai_adapter.cpp",
+  "output": "CMakeFiles/sai.dir/src/sai_adapter.cpp.o"
+},
+{
+  "directory": "/home/jichend/sonic/OLS/sonic-otn-libs/sai/build",
+  "command": "/usr/bin/c++ -Dsai_EXPORTS -I/home/jichend/sonic/OLS/sonic-otn-libs/sai/inc -I/home/jichend/sonic/OLS/sonic-buildimage-molex/src/sonic-sairedis/SAI/inc -I/home/jichend/sonic/OLS/sonic-buildimage-molex/src/sonic-sairedis/SAI/experimental -I/home/jichend/sonic/OLS/sonic-otn-libs/sai/build  -std=c++20 -fvisibility=hidden -Wall -Werror -fPIC -o CMakeFiles/sai.dir/src/sai_adapter_interface.cpp.o -c /home/jichend/sonic/OLS/sonic-otn-libs/sai/src/sai_adapter_interface.cpp",
+  "file": "/home/jichend/sonic/OLS/sonic-otn-libs/sai/src/sai_adapter_interface.cpp",
+  "output": "CMakeFiles/sai.dir/src/sai_adapter_interface.cpp.o"
+},
+{
+  "directory": "/home/jichend/sonic/OLS/sonic-otn-libs/sai/build",
+  "command": "/usr/bin/c++ -Dsai_EXPORTS -I/home/jichend/sonic/OLS/sonic-otn-libs/sai/inc -I/home/jichend/sonic/OLS/sonic-buildimage-molex/src/sonic-sairedis/SAI/inc -I/home/jichend/sonic/OLS/sonic-buildimage-molex/src/sonic-sairedis/SAI/experimental -I/home/jichend/sonic/OLS/sonic-otn-libs/sai/build  -std=c++20 -fvisibility=hidden -Wall -Werror -fPIC -o CMakeFiles/sai.dir/src/virtual_otn_device.cpp.o -c /home/jichend/sonic/OLS/sonic-otn-libs/sai/src/virtual_otn_device.cpp",
+  "file": "/home/jichend/sonic/OLS/sonic-otn-libs/sai/src/virtual_otn_device.cpp",
+  "output": "CMakeFiles/sai.dir/src/virtual_otn_device.cpp.o"
+},
+{
+  "directory": "/home/jichend/sonic/OLS/sonic-otn-libs/sai/build",
+  "command": "/usr/bin/c++ -Dsai_EXPORTS -I/home/jichend/sonic/OLS/sonic-otn-libs/sai/inc -I/home/jichend/sonic/OLS/sonic-buildimage-molex/src/sonic-sairedis/SAI/inc -I/home/jichend/sonic/OLS/sonic-buildimage-molex/src/sonic-sairedis/SAI/experimental -I/home/jichend/sonic/OLS/sonic-otn-libs/sai/build  -std=c++20 -fvisibility=hidden -Wall -Werror -fPIC -o CMakeFiles/sai.dir/src/virtual_otn_dev_mgr.cpp.o -c /home/jichend/sonic/OLS/sonic-otn-libs/sai/src/virtual_otn_dev_mgr.cpp",
+  "file": "/home/jichend/sonic/OLS/sonic-otn-libs/sai/src/virtual_otn_dev_mgr.cpp",
+  "output": "CMakeFiles/sai.dir/src/virtual_otn_dev_mgr.cpp.o"
+},
+{
+  "directory": "/home/jichend/sonic/OLS/sonic-otn-libs/sai/build",
+  "command": "/usr/bin/c++ -Dsai_EXPORTS -I/home/jichend/sonic/OLS/sonic-otn-libs/sai/inc -I/home/jichend/sonic/OLS/sonic-buildimage-molex/src/sonic-sairedis/SAI/inc -I/home/jichend/sonic/OLS/sonic-buildimage-molex/src/sonic-sairedis/SAI/experimental -I/home/jichend/sonic/OLS/sonic-otn-libs/sai/build  -std=c++20 -fvisibility=hidden -Wall -Werror -fPIC -o CMakeFiles/sai.dir/src/hal_event_listener.cpp.o -c /home/jichend/sonic/OLS/sonic-otn-libs/sai/src/hal_event_listener.cpp",
+  "file": "/home/jichend/sonic/OLS/sonic-otn-libs/sai/src/hal_event_listener.cpp",
+  "output": "CMakeFiles/sai.dir/src/hal_event_listener.cpp.o"
+},
+{
+  "directory": "/home/jichend/sonic/OLS/sonic-otn-libs/sai/build",
+  "command": "/usr/bin/cc -Dsai_EXPORTS -I/home/jichend/sonic/OLS/sonic-otn-libs/sai/inc -I/home/jichend/sonic/OLS/sonic-buildimage-molex/src/sonic-sairedis/SAI/inc -I/home/jichend/sonic/OLS/sonic-buildimage-molex/src/sonic-sairedis/SAI/experimental -I/home/jichend/sonic/OLS/sonic-otn-libs/sai/build -fPIC -o CMakeFiles/sai.dir/src/sai.c.o -c /home/jichend/sonic/OLS/sonic-otn-libs/sai/src/sai.c",
+  "file": "/home/jichend/sonic/OLS/sonic-otn-libs/sai/src/sai.c",
+  "output": "CMakeFiles/sai.dir/src/sai.c.o"
+},
+{
+  "directory": "/home/jichend/sonic/OLS/sonic-otn-libs/sai/build",
+  "command": "/usr/bin/c++  -I/home/jichend/sonic/OLS/sonic-otn-libs/sai/inc -I/home/jichend/sonic/OLS/sonic-buildimage-molex/src/sonic-sairedis/SAI/inc -I/home/jichend/sonic/OLS/sonic-buildimage-molex/src/sonic-sairedis/SAI/experimental -I/home/jichend/sonic/OLS/sonic-otn-libs/sai/build  -std=c++20 -fvisibility=hidden -Wall -Werror -o CMakeFiles/sai_test.dir/test/test.cpp.o -c /home/jichend/sonic/OLS/sonic-otn-libs/sai/test/test.cpp",
+  "file": "/home/jichend/sonic/OLS/sonic-otn-libs/sai/test/test.cpp",
+  "output": "CMakeFiles/sai_test.dir/test/test.cpp.o"
+}
+]

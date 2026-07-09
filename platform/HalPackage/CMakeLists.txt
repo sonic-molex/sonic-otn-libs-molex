@@ -35,6 +35,6 @@ install(FILES ${HALPLATFORMAPI_DIR}/HalPlatformApiServer
         PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ GROUP_EXECUTE GROUP_WRITE GROUP_READ WORLD_EXECUTE WORLD_WRITE WORLD_READ
         DESTINATION /usr/local/bin)
 
-# Canonical alarm catalog read by otn-vhal (OTN_VHAL_CATALOG_DEFAULT).
-install(FILES ${OTNVHAL_SRC}/alarm/otn_alarm_catalog.json
-        DESTINATION /usr/share/sonic/otn)
+# NOTE: the alarm catalog (otn_alarm_catalog.json) is shipped by the libsai-otn
+# deb (sai/CMakeLists.txt), built from source alongside libsai's kTable. Do not
+# also install it here -- two debs writing the same path is a dpkg conflict.

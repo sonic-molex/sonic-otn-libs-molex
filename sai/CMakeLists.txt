@@ -114,3 +114,9 @@ install(TARGETS ${TARGET}
 install(TARGETS ${TEST}
         PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ GROUP_EXECUTE GROUP_WRITE GROUP_READ WORLD_EXECUTE WORLD_WRITE WORLD_READ
         DESTINATION /usr/local/bin)
+
+# Ship the alarm catalog in the libsai-otn deb (`make package`). Built from source
+# alongside libsai's compiled kTable, so the runtime catalog otn-vhal reads and the
+# in-libsai table are always from the same revision (no drift, no stale online deb).
+install(FILES ${ALARM_CATALOG}
+        DESTINATION /usr/share/sonic/otn)

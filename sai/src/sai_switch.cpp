@@ -1,4 +1,5 @@
 #include "sai_adapter.h"
+#include "hal_event_listener.h"
 #include <sstream>
 #include <iomanip>
 
@@ -46,6 +47,11 @@ sai_adapter::init_switch()
 
     switch_metadata_ptr->switch_id = switch_obj->sai_object_id;
     switch_list_ptr->push_back(switch_obj->sai_object_id);
+
+    /* Start listening for HAL events (fan/temp/psu, ...) now that the switch
+     * object exists; received events become alarms via report_hal_alarm. */
+    hal_listener::start_listener();
+
     return SAI_STATUS_SUCCESS;
 }
 
@@ -108,6 +114,9 @@ sai_adapter::get_switch_attribute(sai_object_id_t switch_id,
         case SAI_SWITCH_ATTR_OTN_ALARM_EVENT_NOTIFY:
             attr_list[i].value.ptr = (void *) switch_metadata_ptr->otn_alarm_event_ntf;
             break;
+        case SAI_SWITCH_ATTR_OTN_OTDR_SCAN_COMPLETE_NOTIFY:
+            attr_list[i].value.ptr = (void *) switch_metadata_ptr->otn_otdr_scan_complete_ntf;
+            break;
         default:
             logger::warn("unsupported switch attribute " + std::to_string(attr_list[i].id));
             return SAI_STATUS_NOT_IMPLEMENTED;
@@ -153,6 +162,10 @@ sai_adapter::set_switch_attribute(sai_object_id_t switch_id,
     case SAI_SWITCH_ATTR_OTN_ALARM_EVENT_NOTIFY:
         logger::notice("otn alarm event notification funciton was set");
         switch_metadata_ptr->otn_alarm_event_ntf = (sai_otn_alarm_event_notification_fn) attr->value.ptr;
+        break;
+    case SAI_SWITCH_ATTR_OTN_OTDR_SCAN_COMPLETE_NOTIFY:
+        logger::notice("otn otdr scan complete notification function was set");
+        switch_metadata_ptr->otn_otdr_scan_complete_ntf = (sai_otn_otdr_scan_complete_notification_fn) attr->value.ptr;
         break;
     default:
         logger::warn("unsupported switch attribute " + std::to_string(attr->id));

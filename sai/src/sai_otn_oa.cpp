@@ -90,21 +90,29 @@ sai_adapter::set_otn_oa_attribute(sai_object_id_t otn_oa_id,
         oa_dev->set_type((sai_otn_oa_type_t)obj->oa_type);
         break;
     case SAI_OTN_OA_ATTR_TARGET_GAIN:
+    {
         obj->set_gain = attr->value.u32;
 
-        //set into virtual device
-        if (!oa_dev->set_target_gain(attr->value.u32)) {
-            /* send notification for invalid gain value */
-            std::string event_name = "Out of Gain Range";
-            std::string description = "Target gain value " + std::to_string(attr->value.u32) +
-                                      " is out of range [" + std::to_string(oa_dev->get_min_gain()) +
-                                      ", " + std::to_string(oa_dev->get_max_gain()) + "]";
-            std::vector<uint8_t> raw_data = {(uint8_t)(attr->value.u32 & 0xFF), (uint8_t)((attr->value.u32 >> 8) & 0xFF), (uint8_t)((attr->value.u32 >> 16) & 0xFF), (uint8_t)((attr->value.u32 >> 24) & 0xFF)};
-            send_alarm_event_data(obj->sai_object_id, SAI_OTN_ALARM_SEVERITY_MINOR, SAI_OTN_ALARM_ACTION_RAISE, event_name, description, raw_data);
+        //set into virtual device (false => value out of [min,max] gain range)
+        bool out_of_range = !oa_dev->set_target_gain(attr->value.u32);
 
+        std::string event_name = "Out of Gain Range";
+        std::string description = out_of_range
+            ? "Target gain value " + std::to_string(attr->value.u32) +
+              " is out of range [" + std::to_string(oa_dev->get_min_gain()) +
+              ", " + std::to_string(oa_dev->get_max_gain()) + "]"
+            : "Target gain value " + std::to_string(attr->value.u32) + " is within range";
+        std::vector<uint8_t> raw_data = {(uint8_t)(attr->value.u32 & 0xFF), (uint8_t)((attr->value.u32 >> 8) & 0xFF), (uint8_t)((attr->value.u32 >> 16) & 0xFF), (uint8_t)((attr->value.u32 >> 24) & 0xFF)};
+
+        /* RAISE on first out-of-range write, CLEAR once a valid gain is set */
+        evaluate_alarm(oa_dev, obj->sai_object_id, event_name, SAI_OTN_ALARM_SEVERITY_MINOR,
+                       out_of_range, description, raw_data);
+
+        if (out_of_range) {
             rc = SAI_STATUS_INVALID_ATTR_VALUE_0;
         }
         break;
+    }
     case SAI_OTN_OA_ATTR_TARGET_GAIN_TILT:
         oa_dev->set_target_gain_tilt(attr->value.s32);
         break;
@@ -128,6 +136,17 @@ sai_adapter::set_otn_oa_attribute(sai_object_id_t otn_oa_id,
             //rc = hal_set_oa_mode(obj->dev_type, obj->set_mode, obj->set_power);
         }
         oa_dev->set_target_output_power(attr->value.s32);
+
+        /* RAISE when target output power exceeds the device max, CLEAR otherwise */
+        bool over_max = attr->value.s32 > oa_dev->get_max_output_power();
+        std::string event_name = "Out of Power Range";
+        std::string description = over_max
+            ? "Target output power " + std::to_string(attr->value.s32) +
+              " exceeds max output power " + std::to_string(oa_dev->get_max_output_power())
+            : "Target output power " + std::to_string(attr->value.s32) + " is within range";
+        std::vector<uint8_t> raw_data = {(uint8_t)(attr->value.s32 & 0xFF), (uint8_t)((attr->value.s32 >> 8) & 0xFF), (uint8_t)((attr->value.s32 >> 16) & 0xFF), (uint8_t)((attr->value.s32 >> 24) & 0xFF)};
+        evaluate_alarm(oa_dev, obj->sai_object_id, event_name, SAI_OTN_ALARM_SEVERITY_MINOR,
+                       over_max, description, raw_data);
         break;
     }
     case SAI_OTN_OA_ATTR_ENABLED:

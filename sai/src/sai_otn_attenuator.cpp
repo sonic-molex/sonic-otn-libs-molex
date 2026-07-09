@@ -101,8 +101,22 @@ sai_adapter::set_otn_attenuator_attribute(sai_object_id_t otn_attenuator_id,
     case SAI_OTN_ATTENUATOR_ATTR_ATTENUATION:
     {
         obj->set_attn = attr->value.u32;
- 
+
         voa_dev->set_attenuation(attr->value.s32);
+
+        /* Attenuation valid range [0, 6000] in 0.01 dB units (0..60 dB).
+         * RAISE when outside, CLEAR once a valid value is set. */
+        static const sai_int32_t ATTN_MIN = 0;
+        static const sai_int32_t ATTN_MAX = 6000;
+        bool out_of_range = attr->value.s32 < ATTN_MIN || attr->value.s32 > ATTN_MAX;
+        std::string event_name = "Attenuation Out of Range";
+        std::string description = out_of_range
+            ? "Attenuation " + std::to_string(attr->value.s32) +
+              " is out of range [" + std::to_string(ATTN_MIN) + ", " + std::to_string(ATTN_MAX) + "]"
+            : "Attenuation " + std::to_string(attr->value.s32) + " is within range";
+        std::vector<uint8_t> raw_data = {(uint8_t)(attr->value.s32 & 0xFF), (uint8_t)((attr->value.s32 >> 8) & 0xFF), (uint8_t)((attr->value.s32 >> 16) & 0xFF), (uint8_t)((attr->value.s32 >> 24) & 0xFF)};
+        evaluate_alarm(voa_dev, obj->sai_object_id, event_name, SAI_OTN_ALARM_SEVERITY_MINOR,
+                       out_of_range, description, raw_data);
         break;
     }
     case SAI_OTN_ATTENUATOR_ATTR_ENABLED:

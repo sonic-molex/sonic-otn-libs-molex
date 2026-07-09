@@ -62,11 +62,18 @@ sai_adapter::sai_adapter()
     otn_wss_api.set_otn_wss_spec_powers_attribute = &sai_adapter::set_otn_wss_spec_powers_attribute;
     otn_wss_api.get_otn_wss_spec_powers_attribute = nullptr;
 
-    // TODO
-    //otn_otdr_api.create_otn_otdr = &sai_adapter::create_otn_otdr;
-    //otn_otdr_api.remove_otn_otdr = &sai_adapter::remove_otn_otdr;
-    //otn_otdr_api.set_otn_otdr_attribute = &sai_adapter::set_otn_otdr_attribute;
-    //otn_otdr_api.get_otn_otdr_attribute = &sai_adapter::get_otn_otdr_attribute;
+    otn_otdr_api.create_otn_otdr = &sai_adapter::create_otn_otdr;
+    otn_otdr_api.remove_otn_otdr = &sai_adapter::remove_otn_otdr;
+    otn_otdr_api.set_otn_otdr_attribute = &sai_adapter::set_otn_otdr_attribute;
+    otn_otdr_api.get_otn_otdr_attribute = &sai_adapter::get_otn_otdr_attribute;
+    otn_otdr_api.create_otn_otdr_scan_type = &sai_adapter::create_otn_otdr_scan_type;
+    otn_otdr_api.remove_otn_otdr_scan_type = &sai_adapter::remove_otn_otdr_scan_type;
+    otn_otdr_api.set_otn_otdr_scan_type_attribute = &sai_adapter::set_otn_otdr_scan_type_attribute;
+    otn_otdr_api.get_otn_otdr_scan_type_attribute = &sai_adapter::get_otn_otdr_scan_type_attribute;
+    otn_otdr_api.create_otn_otdr_fiber_profile = &sai_adapter::create_otn_otdr_fiber_profile;
+    otn_otdr_api.remove_otn_otdr_fiber_profile = &sai_adapter::remove_otn_otdr_fiber_profile;
+    otn_otdr_api.set_otn_otdr_fiber_profile_attribute = &sai_adapter::set_otn_otdr_fiber_profile_attribute;
+    otn_otdr_api.get_otn_otdr_fiber_profile_attribute = &sai_adapter::get_otn_otdr_fiber_profile_attribute;
 
     logger::notice("sai adapter initialized");
 }
@@ -101,9 +108,9 @@ sai_adapter::sai_api_query(sai_api_t sai_api_id, void **api_method_table)
     case SAI_API_OTN_WSS:
         *api_method_table = &otn_wss_api;
         break;
-    //case SAI_API_OTN_OTDR:
-    //    *api_method_table = &otn_otdr_api;
-    //    break;
+    case SAI_API_OTN_OTDR:
+        *api_method_table = &otn_otdr_api;
+        break;
     default:
         logger::notice("unsupported api request made " + std::to_string(sai_api_id));
         return SAI_STATUS_FAILURE;
@@ -144,6 +151,7 @@ sai_adapter::sai_query_attribute_capability(
     if (object_type == SAI_OBJECT_TYPE_SWITCH) {
         switch (attr_id) {
         case SAI_SWITCH_ATTR_OTN_ALARM_EVENT_NOTIFY:
+        case SAI_SWITCH_ATTR_OTN_OTDR_SCAN_COMPLETE_NOTIFY:
             attr_capability->create_implemented = false;
             attr_capability->set_implemented = true;
             attr_capability->get_implemented = true;

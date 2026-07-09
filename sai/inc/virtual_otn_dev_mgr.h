@@ -17,6 +17,12 @@ public:
     // Base getter
     virtual_otn_device* get_device_base(sai_object_id_t object_id);
 
+    // Resolve the SAI object_id of the index-th device of a given type, ordered
+    // deterministically by device name (so instance 0/1 -> OA0-0/OA0-1). Used to
+    // attach object-bound HAL alarms to their SAI object. Returns
+    // SAI_NULL_OBJECT_ID if there is no such device.
+    sai_object_id_t get_object_id_by_type_index(sai_object_type_extensions_t type, int index);
+
     // Typed getter
     template <typename T>
     T* get_device(sai_object_id_t object_id) {

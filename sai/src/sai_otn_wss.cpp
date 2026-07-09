@@ -1,10 +1,32 @@
 #include "sai_adapter.h"
 #include "dev_util.h"
 #include "virtual_otn_dev_mgr.h"
+#include "virtual_otn_device.h"
 #include <algorithm>
 #include <cstring>
 
 // ===================== OTN WSS =====================
+
+/* Re-evaluate the WSS media-channel frequency-range alarm. Both bounds must be
+ * set (non-zero) and lower must be < upper; otherwise RAISE "Invalid Frequency
+ * Range". Called whenever either bound changes so a later valid pair CLEARs it. */
+void sai_adapter::check_wss_frequency_alarm(virtual_otn_wss_device* wss_dev, sai_object_id_t object_id)
+{
+    sai_uint64_t lo = wss_dev->get_lower_frequency();
+    sai_uint64_t hi = wss_dev->get_upper_frequency();
+
+    /* Only judge once both bounds have been configured. */
+    bool invalid = (lo != 0 && hi != 0 && lo >= hi);
+
+    std::string event_name = "Invalid Frequency Range";
+    std::string description = invalid
+        ? "Lower frequency " + std::to_string(lo) +
+          " is not below upper frequency " + std::to_string(hi)
+        : "Frequency range [" + std::to_string(lo) + ", " + std::to_string(hi) + "] is valid";
+    std::vector<uint8_t> raw_data;
+    sai_adapter::evaluate_alarm(wss_dev, object_id, event_name, SAI_OTN_ALARM_SEVERITY_MINOR,
+                                invalid, description, raw_data);
+}
 
 sai_status_t
 sai_adapter::create_otn_wss(sai_object_id_t *otn_wss_id,
@@ -145,11 +167,17 @@ sai_adapter::set_otn_wss_attribute(sai_object_id_t otn_wss_id,
         break;
     case SAI_OTN_WSS_ATTR_LOWER_FREQUENCY:
         obj->lower_frequency = attr->value.u64;
-        if (wss_dev) wss_dev->set_lower_frequency(attr->value.u64);
+        if (wss_dev) {
+            wss_dev->set_lower_frequency(attr->value.u64);
+            check_wss_frequency_alarm(wss_dev, obj->sai_object_id);
+        }
         break;
     case SAI_OTN_WSS_ATTR_UPPER_FREQUENCY:
         obj->upper_frequency = attr->value.u64;
-        if (wss_dev) wss_dev->set_upper_frequency(attr->value.u64);
+        if (wss_dev) {
+            wss_dev->set_upper_frequency(attr->value.u64);
+            check_wss_frequency_alarm(wss_dev, obj->sai_object_id);
+        }
         break;
     case SAI_OTN_WSS_ATTR_ADMIN_STATE:
         obj->admin_state = (sai_otn_wss_admin_state_t)attr->value.s32;

@@ -2,6 +2,10 @@
 #include "virtual_otn_dev_mgr.h"
 #include <unordered_map>
 #include <memory>
+#include <algorithm>
+#include <vector>
+#include <utility>
+#include <string>
 #include "logger.h"
 
 // ===================== Singleton Access =====================
@@ -17,6 +21,30 @@ virtual_otn_device* virtual_otn_device_manager::get_device_base(sai_object_id_t 
         return it->second.get();
     }
     return nullptr;
+}
+
+sai_object_id_t virtual_otn_device_manager::get_object_id_by_type_index(
+        sai_object_type_extensions_t type, int index)
+{
+    if (index < 0) {
+        return SAI_NULL_OBJECT_ID;
+    }
+    // Collect (name, object_id) of matching devices, order by name for a stable
+    // instance->object mapping, then pick the index-th.
+    std::vector<std::pair<std::string, sai_object_id_t>> matches;
+    for (const auto& kv : g_otn_devices) {
+        if (kv.second && kv.second->get_sai_object_type() == type) {
+            matches.emplace_back(kv.second->get_name(), kv.first);
+        }
+    }
+    if ((size_t)index >= matches.size()) {
+        logger::warn(std::string(__func__) + " no device of type " + std::to_string(type) +
+                     " at index " + std::to_string(index) + " (have " +
+                     std::to_string(matches.size()) + ")");
+        return SAI_NULL_OBJECT_ID;
+    }
+    std::sort(matches.begin(), matches.end());
+    return matches[index].second;
 }
 
 // ===================== Factory Function =====================
@@ -52,6 +80,10 @@ sai_status_t virtual_otn_device_manager::create_device(sai_object_id_t object_id
 
             case SAI_OBJECT_TYPE_OTN_WSS:
                 g_otn_devices[object_id] = std::make_unique<virtual_otn_wss_device>(object_id, type);
+                break;
+
+            case SAI_OBJECT_TYPE_OTN_OTDR:
+                g_otn_devices[object_id] = std::make_unique<virtual_otn_otdr_device>(object_id, type);
                 break;
 
             default:

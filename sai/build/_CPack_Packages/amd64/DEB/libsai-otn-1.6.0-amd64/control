@@ -1,0 +1,10 @@
+Architecture: amd64
+Depends: libc6 (>= 2.31)
+Description: Vendor implementation of SONiC SAI API for otn-kvm platform
+Maintainer: Molex <lu.mao@molex.com>
+Package: libsai
+Priority: optional
+Section: devel
+Version: 1.6.0
+Installed-Size: 2593
+

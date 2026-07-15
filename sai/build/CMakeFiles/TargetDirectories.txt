@@ -1,0 +1,13 @@
+/home/jichend/sonic/OLS/sonic-otn-libs/sai/build/CMakeFiles/gen_alarm_table.dir
+/home/jichend/sonic/OLS/sonic-otn-libs/sai/build/CMakeFiles/gen_default_json.dir
+/home/jichend/sonic/OLS/sonic-otn-libs/sai/build/CMakeFiles/check_default_json.dir
+/home/jichend/sonic/OLS/sonic-otn-libs/sai/build/CMakeFiles/sai.dir
+/home/jichend/sonic/OLS/sonic-otn-libs/sai/build/CMakeFiles/sai_test.dir
+/home/jichend/sonic/OLS/sonic-otn-libs/sai/build/CMakeFiles/package.dir
+/home/jichend/sonic/OLS/sonic-otn-libs/sai/build/CMakeFiles/package_source.dir
+/home/jichend/sonic/OLS/sonic-otn-libs/sai/build/CMakeFiles/edit_cache.dir
+/home/jichend/sonic/OLS/sonic-otn-libs/sai/build/CMakeFiles/rebuild_cache.dir
+/home/jichend/sonic/OLS/sonic-otn-libs/sai/build/CMakeFiles/list_install_components.dir
+/home/jichend/sonic/OLS/sonic-otn-libs/sai/build/CMakeFiles/install.dir
+/home/jichend/sonic/OLS/sonic-otn-libs/sai/build/CMakeFiles/install/local.dir
+/home/jichend/sonic/OLS/sonic-otn-libs/sai/build/CMakeFiles/install/strip.dir

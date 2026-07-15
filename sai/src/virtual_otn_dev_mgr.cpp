@@ -103,6 +103,18 @@ sai_status_t virtual_otn_device_manager::create_device(sai_object_id_t object_id
     return ret_status;
 }
 
+sai_status_t virtual_otn_device_manager::set_threshold_ranges(sai_object_id_t object_id, uint32_t device_type, std::unordered_map<std::string, otn_threshold_range_t>& threshold_ranges)
+{
+    if (g_otn_devices.find(object_id) == g_otn_devices.end()) {
+        logger::warn(std::string(__func__) + " object_id " + std::to_string(object_id) + " not found");
+        return SAI_STATUS_ITEM_NOT_FOUND;
+    }
+
+    g_otn_devices[object_id]->set_threshold_ranges(device_type, threshold_ranges);
+    return SAI_STATUS_SUCCESS;
+
+}
+
 
 sai_status_t virtual_otn_device_manager::delete_device(sai_object_id_t object_id)
 {

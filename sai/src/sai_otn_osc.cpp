@@ -20,12 +20,19 @@ sai_adapter::create_otn_osc(sai_object_id_t *otn_osc_id,
     sai_status_t ret_status = mgr.create_device(obj->sai_object_id,SAI_OBJECT_TYPE_OTN_OSC);
     if (ret_status == SAI_STATUS_SUCCESS)
     {
+        sai_status_t tmp_status = SAI_STATUS_SUCCESS;
         for (uint32_t i = 0; i < attr_count; i++) {
-            sai_status_t tmp_status = set_otn_osc_attribute(obj->sai_object_id, attr_list + i);
+            tmp_status = set_otn_osc_attribute(obj->sai_object_id, attr_list + i);
             logger::debug(std::string(__func__) + " attr " + std::to_string(attr_list[i].id) + " ret " + std::to_string(tmp_status));
             if (tmp_status != SAI_STATUS_SUCCESS) {
                 ret_status = tmp_status;
                 break;
+            }
+        }
+        if (tmp_status == SAI_STATUS_SUCCESS) {
+            std::unordered_map<std::string, otn_threshold_range_t> threshold_ranges;
+            if (otn_threshold_config::instance().get_threshold_map(obj->dev_name, threshold_ranges)) {
+                mgr.set_threshold_ranges(obj->sai_object_id, obj->dev_type, threshold_ranges);
             }
         }
     }

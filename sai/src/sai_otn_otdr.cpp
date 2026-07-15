@@ -85,11 +85,18 @@ sai_adapter::create_otn_otdr(sai_object_id_t *otn_otdr_id,
     // Virtual device shares the same object id with SAI object
     sai_status_t ret_status = mgr.create_device(obj->sai_object_id, SAI_OBJECT_TYPE_OTN_OTDR);
     if (ret_status == SAI_STATUS_SUCCESS) {
+        sai_status_t tmp = SAI_STATUS_SUCCESS;
         for (uint32_t i = 0; i < attr_count; i++) {
-            sai_status_t tmp = set_otn_otdr_attribute(obj->sai_object_id, attr_list + i);
+            tmp = set_otn_otdr_attribute(obj->sai_object_id, attr_list + i);
             if (tmp != SAI_STATUS_SUCCESS) {
                 ret_status = tmp;
                 break;
+            }
+        }
+        if (tmp == SAI_STATUS_SUCCESS) {
+            std::unordered_map<std::string, otn_threshold_range_t> threshold_ranges;
+            if (otn_threshold_config::instance().get_threshold_map(obj->dev_name, threshold_ranges)) {
+                mgr.set_threshold_ranges(obj->sai_object_id, obj->dev_type, threshold_ranges);
             }
         }
     }

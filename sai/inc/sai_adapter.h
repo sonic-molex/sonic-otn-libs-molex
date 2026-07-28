@@ -13,6 +13,7 @@ extern "C" {
 
 // LOG
 #include "logger.h"
+#include "otn_threshold_config.h"
 
 // forward declarations; full definitions in virtual_otn_device.h
 class virtual_otn_device;

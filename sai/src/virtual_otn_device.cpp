@@ -6,6 +6,21 @@
 #include <climits>
 #include "logger.h"
 
+sai_status_t virtual_otn_device::set_threshold_ranges(uint32_t device_type, std::unordered_map<std::string, otn_threshold_range_t>& threshold_ranges)
+{
+    sai_status_t rc = SAI_STATUS_SUCCESS;
+
+    for (auto& item : threshold_ranges) {
+        const std::string key = item.first;
+        const otn_threshold_range_t& range = item.second;
+        
+        // TODO: Based on different types of devices, threshold ranges are set differently.
+        // Function signature example is: int EDFA_SetOscRxThrHys(uint32_t uiDevType, int16_t sThr, int16_t sHys);
+        logger::notice(std::string(__func__) + " setting threshold range for " + key + " to " + std::to_string(range.low) + " - " + std::to_string(range.high));
+    }
+    return rc;
+}
+
 /* OCM Device */
 // Channel management
    sai_status_t virtual_otn_ocm_device::add_channel(sai_object_id_t parent_ocm_id, sai_object_id_t channel_id)

@@ -23,6 +23,9 @@ static const char *module[] = {
 sai_status_t
 sai_api_initialize(uint64_t flags, const sai_service_method_table_t *services)
 {
+    if (services && services->profile_get_value) {
+        sai_adapter_set_profile_getter(services->profile_get_value);
+    }
     sai_adapter = create_sai_adapter();
     return SAI_STATUS_SUCCESS;
 }

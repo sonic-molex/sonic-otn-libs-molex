@@ -1,5 +1,6 @@
 #include "sai_adapter_interface.h"
 #include "sai_adapter.h"
+#include "otn_threshold_config.h"
 
 extern "C" {
     S_O_Handle create_sai_adapter()
@@ -37,5 +38,10 @@ extern "C" {
     {
         sai_adapter *q = (sai_adapter *)p;
         return q->sai_query_attribute_capability(switch_id, object_type, attr_id, attr_capability);
+    }
+
+    void sai_adapter_set_profile_getter(sai_profile_get_value_fn fn)
+    {
+        otn_threshold_config::instance().set_profile_getter(fn);
     }
 }

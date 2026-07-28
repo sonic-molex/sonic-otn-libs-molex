@@ -74,6 +74,7 @@ add_library(${TARGET} SHARED ${SRC_DIR}/logger.cpp
                              ${SRC_DIR}/sai_otn_otdr.cpp
                              ${SRC_DIR}/sai_otn_otdr_scan_type.cpp
                              ${SRC_DIR}/otdr_static_config.cpp
+                             ${SRC_DIR}/otn_threshold_config.cpp
                              ${SRC_DIR}/sai_adapter.cpp
                              ${SRC_DIR}/sai_adapter_interface.cpp
                              ${SRC_DIR}/virtual_otn_device.cpp

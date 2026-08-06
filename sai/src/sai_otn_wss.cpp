@@ -345,6 +345,150 @@ sai_adapter::get_otn_wss_attribute(sai_object_id_t otn_wss_id,
     return rc;
 }
 
+// ===================== OTN WSS BULK =====================
+//
+// WssOrch drains its consumer into one bulk call per operation, so syncd looks
+// these up in sai_otn_wss_api_t. Each entry delegates to its single-object
+// counterpart -- there is no per-batch device work to amortize here.
+
+sai_status_t
+sai_adapter::create_otn_wsss(sai_object_id_t switch_id,
+                             uint32_t object_count,
+                             const uint32_t *attr_count,
+                             const sai_attribute_t **attr_list,
+                             sai_bulk_op_error_mode_t mode,
+                             sai_object_id_t *object_id,
+                             sai_status_t *object_statuses)
+{
+    if (!attr_count || !attr_list || !object_id || !object_statuses)
+    {
+        return SAI_STATUS_INVALID_PARAMETER;
+    }
+
+    bool any_failure = false;
+    for (uint32_t i = 0; i < object_count; i++)
+    {
+        object_id[i] = SAI_NULL_OBJECT_ID;
+        object_statuses[i] = create_otn_wss(&object_id[i], switch_id,
+                                           attr_count[i], attr_list[i]);
+        if (object_statuses[i] != SAI_STATUS_SUCCESS)
+        {
+            any_failure = true;
+            if (mode == SAI_BULK_OP_ERROR_MODE_STOP_ON_ERROR)
+            {
+                for (uint32_t j = i + 1; j < object_count; j++)
+                {
+                    object_id[j] = SAI_NULL_OBJECT_ID;
+                    object_statuses[j] = SAI_STATUS_NOT_EXECUTED;
+                }
+                break;
+            }
+        }
+    }
+
+    return any_failure ? SAI_STATUS_FAILURE : SAI_STATUS_SUCCESS;
+}
+
+sai_status_t
+sai_adapter::remove_otn_wsss(uint32_t object_count,
+                             const sai_object_id_t *object_id,
+                             sai_bulk_op_error_mode_t mode,
+                             sai_status_t *object_statuses)
+{
+    if (!object_id || !object_statuses)
+    {
+        return SAI_STATUS_INVALID_PARAMETER;
+    }
+
+    bool any_failure = false;
+    for (uint32_t i = 0; i < object_count; i++)
+    {
+        object_statuses[i] = remove_otn_wss(object_id[i]);
+        if (object_statuses[i] != SAI_STATUS_SUCCESS)
+        {
+            any_failure = true;
+            if (mode == SAI_BULK_OP_ERROR_MODE_STOP_ON_ERROR)
+            {
+                for (uint32_t j = i + 1; j < object_count; j++)
+                {
+                    object_statuses[j] = SAI_STATUS_NOT_EXECUTED;
+                }
+                break;
+            }
+        }
+    }
+
+    return any_failure ? SAI_STATUS_FAILURE : SAI_STATUS_SUCCESS;
+}
+
+sai_status_t
+sai_adapter::set_otn_wsss_attribute(uint32_t object_count,
+                                    const sai_object_id_t *object_id,
+                                    const sai_attribute_t *attr_list,
+                                    sai_bulk_op_error_mode_t mode,
+                                    sai_status_t *object_statuses)
+{
+    if (!object_id || !attr_list || !object_statuses)
+    {
+        return SAI_STATUS_INVALID_PARAMETER;
+    }
+
+    bool any_failure = false;
+    for (uint32_t i = 0; i < object_count; i++)
+    {
+        object_statuses[i] = set_otn_wss_attribute(object_id[i], &attr_list[i]);
+        if (object_statuses[i] != SAI_STATUS_SUCCESS)
+        {
+            any_failure = true;
+            if (mode == SAI_BULK_OP_ERROR_MODE_STOP_ON_ERROR)
+            {
+                for (uint32_t j = i + 1; j < object_count; j++)
+                {
+                    object_statuses[j] = SAI_STATUS_NOT_EXECUTED;
+                }
+                break;
+            }
+        }
+    }
+
+    return any_failure ? SAI_STATUS_FAILURE : SAI_STATUS_SUCCESS;
+}
+
+sai_status_t
+sai_adapter::get_otn_wsss_attribute(uint32_t object_count,
+                                    const sai_object_id_t *object_id,
+                                    const uint32_t *attr_count,
+                                    sai_attribute_t **attr_list,
+                                    sai_bulk_op_error_mode_t mode,
+                                    sai_status_t *object_statuses)
+{
+    if (!object_id || !attr_count || !attr_list || !object_statuses)
+    {
+        return SAI_STATUS_INVALID_PARAMETER;
+    }
+
+    bool any_failure = false;
+    for (uint32_t i = 0; i < object_count; i++)
+    {
+        object_statuses[i] = get_otn_wss_attribute(object_id[i], attr_count[i],
+                                                   attr_list[i]);
+        if (object_statuses[i] != SAI_STATUS_SUCCESS)
+        {
+            any_failure = true;
+            if (mode == SAI_BULK_OP_ERROR_MODE_STOP_ON_ERROR)
+            {
+                for (uint32_t j = i + 1; j < object_count; j++)
+                {
+                    object_statuses[j] = SAI_STATUS_NOT_EXECUTED;
+                }
+                break;
+            }
+        }
+    }
+
+    return any_failure ? SAI_STATUS_FAILURE : SAI_STATUS_SUCCESS;
+}
+
 // ===================== OTN WSS SPEC POWER =====================
 
 sai_status_t
@@ -557,6 +701,76 @@ sai_adapter::get_otn_wss_spec_power_attribute(sai_object_id_t otn_wss_spec_power
 }
 
 sai_status_t
+sai_adapter::create_otn_wss_spec_powers(sai_object_id_t switch_id,
+                                        uint32_t object_count,
+                                        const uint32_t *attr_count,
+                                        const sai_attribute_t **attr_list,
+                                        sai_bulk_op_error_mode_t mode,
+                                        sai_object_id_t *object_id,
+                                        sai_status_t *object_statuses)
+{
+    if (!attr_count || !attr_list || !object_id || !object_statuses)
+    {
+        return SAI_STATUS_INVALID_PARAMETER;
+    }
+
+    bool any_failure = false;
+    for (uint32_t i = 0; i < object_count; i++)
+    {
+        object_id[i] = SAI_NULL_OBJECT_ID;
+        object_statuses[i] = create_otn_wss_spec_power(&object_id[i], switch_id,
+                                                      attr_count[i], attr_list[i]);
+        if (object_statuses[i] != SAI_STATUS_SUCCESS)
+        {
+            any_failure = true;
+            if (mode == SAI_BULK_OP_ERROR_MODE_STOP_ON_ERROR)
+            {
+                for (uint32_t j = i + 1; j < object_count; j++)
+                {
+                    object_id[j] = SAI_NULL_OBJECT_ID;
+                    object_statuses[j] = SAI_STATUS_NOT_EXECUTED;
+                }
+                break;
+            }
+        }
+    }
+
+    return any_failure ? SAI_STATUS_FAILURE : SAI_STATUS_SUCCESS;
+}
+
+sai_status_t
+sai_adapter::remove_otn_wss_spec_powers(uint32_t object_count,
+                                        const sai_object_id_t *object_id,
+                                        sai_bulk_op_error_mode_t mode,
+                                        sai_status_t *object_statuses)
+{
+    if (!object_id || !object_statuses)
+    {
+        return SAI_STATUS_INVALID_PARAMETER;
+    }
+
+    bool any_failure = false;
+    for (uint32_t i = 0; i < object_count; i++)
+    {
+        object_statuses[i] = remove_otn_wss_spec_power(object_id[i]);
+        if (object_statuses[i] != SAI_STATUS_SUCCESS)
+        {
+            any_failure = true;
+            if (mode == SAI_BULK_OP_ERROR_MODE_STOP_ON_ERROR)
+            {
+                for (uint32_t j = i + 1; j < object_count; j++)
+                {
+                    object_statuses[j] = SAI_STATUS_NOT_EXECUTED;
+                }
+                break;
+            }
+        }
+    }
+
+    return any_failure ? SAI_STATUS_FAILURE : SAI_STATUS_SUCCESS;
+}
+
+sai_status_t
 sai_adapter::set_otn_wss_spec_powers_attribute(uint32_t object_count,
                                                const sai_object_id_t *object_id,
                                                const sai_attribute_t *attr_list,
@@ -572,6 +786,42 @@ sai_adapter::set_otn_wss_spec_powers_attribute(uint32_t object_count,
     for (uint32_t i = 0; i < object_count; i++)
     {
         object_statuses[i] = set_otn_wss_spec_power_attribute(object_id[i], &attr_list[i]);
+        if (object_statuses[i] != SAI_STATUS_SUCCESS)
+        {
+            any_failure = true;
+            if (mode == SAI_BULK_OP_ERROR_MODE_STOP_ON_ERROR)
+            {
+                for (uint32_t j = i + 1; j < object_count; j++)
+                {
+                    object_statuses[j] = SAI_STATUS_NOT_EXECUTED;
+                }
+                break;
+            }
+        }
+    }
+
+    return any_failure ? SAI_STATUS_FAILURE : SAI_STATUS_SUCCESS;
+}
+
+sai_status_t
+sai_adapter::get_otn_wss_spec_powers_attribute(uint32_t object_count,
+                                               const sai_object_id_t *object_id,
+                                               const uint32_t *attr_count,
+                                               sai_attribute_t **attr_list,
+                                               sai_bulk_op_error_mode_t mode,
+                                               sai_status_t *object_statuses)
+{
+    if (!object_id || !attr_count || !attr_list || !object_statuses)
+    {
+        return SAI_STATUS_INVALID_PARAMETER;
+    }
+
+    bool any_failure = false;
+    for (uint32_t i = 0; i < object_count; i++)
+    {
+        object_statuses[i] = get_otn_wss_spec_power_attribute(object_id[i],
+                                                             attr_count[i],
+                                                             attr_list[i]);
         if (object_statuses[i] != SAI_STATUS_SUCCESS)
         {
             any_failure = true;

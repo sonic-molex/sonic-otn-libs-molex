@@ -39,6 +39,10 @@ sai_adapter::sai_adapter()
     otn_ocm_api.remove_otn_ocm_channel = &sai_adapter::remove_otn_ocm_channel;
     otn_ocm_api.set_otn_ocm_channel_attribute = &sai_adapter::set_otn_ocm_channel_attribute;
     otn_ocm_api.get_otn_ocm_channel_attribute = &sai_adapter::get_otn_ocm_channel_attribute;
+    otn_ocm_api.create_otn_ocm_channels = &sai_adapter::create_otn_ocm_channels;
+    otn_ocm_api.remove_otn_ocm_channels = &sai_adapter::remove_otn_ocm_channels;
+    otn_ocm_api.set_otn_ocm_channels_attribute = &sai_adapter::set_otn_ocm_channels_attribute;
+    otn_ocm_api.get_otn_ocm_channels_attribute = &sai_adapter::get_otn_ocm_channels_attribute;
 
     otn_osc_api.create_otn_osc = &sai_adapter::create_otn_osc;
     otn_osc_api.remove_otn_osc = &sai_adapter::remove_otn_osc;
@@ -49,18 +53,18 @@ sai_adapter::sai_adapter()
     otn_wss_api.remove_otn_wss = &sai_adapter::remove_otn_wss;
     otn_wss_api.set_otn_wss_attribute = &sai_adapter::set_otn_wss_attribute;
     otn_wss_api.get_otn_wss_attribute = &sai_adapter::get_otn_wss_attribute;
-    otn_wss_api.create_otn_wsss = nullptr;
-    otn_wss_api.remove_otn_wsss = nullptr;
-    otn_wss_api.set_otn_wsss_attribute = nullptr;
-    otn_wss_api.get_otn_wsss_attribute = nullptr;
+    otn_wss_api.create_otn_wsss = &sai_adapter::create_otn_wsss;
+    otn_wss_api.remove_otn_wsss = &sai_adapter::remove_otn_wsss;
+    otn_wss_api.set_otn_wsss_attribute = &sai_adapter::set_otn_wsss_attribute;
+    otn_wss_api.get_otn_wsss_attribute = &sai_adapter::get_otn_wsss_attribute;
     otn_wss_api.create_otn_wss_spec_power = &sai_adapter::create_otn_wss_spec_power;
     otn_wss_api.remove_otn_wss_spec_power = &sai_adapter::remove_otn_wss_spec_power;
     otn_wss_api.set_otn_wss_spec_power_attribute = &sai_adapter::set_otn_wss_spec_power_attribute;
     otn_wss_api.get_otn_wss_spec_power_attribute = &sai_adapter::get_otn_wss_spec_power_attribute;
-    otn_wss_api.create_otn_wss_spec_powers = nullptr;
-    otn_wss_api.remove_otn_wss_spec_powers = nullptr;
+    otn_wss_api.create_otn_wss_spec_powers = &sai_adapter::create_otn_wss_spec_powers;
+    otn_wss_api.remove_otn_wss_spec_powers = &sai_adapter::remove_otn_wss_spec_powers;
     otn_wss_api.set_otn_wss_spec_powers_attribute = &sai_adapter::set_otn_wss_spec_powers_attribute;
-    otn_wss_api.get_otn_wss_spec_powers_attribute = nullptr;
+    otn_wss_api.get_otn_wss_spec_powers_attribute = &sai_adapter::get_otn_wss_spec_powers_attribute;
 
     otn_otdr_api.create_otn_otdr = &sai_adapter::create_otn_otdr;
     otn_otdr_api.remove_otn_otdr = &sai_adapter::remove_otn_otdr;

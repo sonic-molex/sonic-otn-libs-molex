@@ -134,6 +134,32 @@ public:
             sai_object_id_t otn_ocm_channel_id,
             uint32_t attr_count,
             sai_attribute_t *attr_list);
+    static sai_status_t create_otn_ocm_channels(
+            sai_object_id_t switch_id,
+            uint32_t object_count,
+            const uint32_t *attr_count,
+            const sai_attribute_t **attr_list,
+            sai_bulk_op_error_mode_t mode,
+            sai_object_id_t *object_id,
+            sai_status_t *object_statuses);
+    static sai_status_t remove_otn_ocm_channels(
+            uint32_t object_count,
+            const sai_object_id_t *object_id,
+            sai_bulk_op_error_mode_t mode,
+            sai_status_t *object_statuses);
+    static sai_status_t set_otn_ocm_channels_attribute(
+            uint32_t object_count,
+            const sai_object_id_t *object_id,
+            const sai_attribute_t *attr_list,
+            sai_bulk_op_error_mode_t mode,
+            sai_status_t *object_statuses);
+    static sai_status_t get_otn_ocm_channels_attribute(
+            uint32_t object_count,
+            const sai_object_id_t *object_id,
+            const uint32_t *attr_count,
+            sai_attribute_t **attr_list,
+            sai_bulk_op_error_mode_t mode,
+            sai_status_t *object_statuses);
 
     // OTAI OSC
     static sai_status_t create_otn_osc(
@@ -164,6 +190,32 @@ public:
             sai_object_id_t otn_wss_id,
             uint32_t attr_count,
             sai_attribute_t *attr_list);
+    static sai_status_t create_otn_wsss(
+            sai_object_id_t switch_id,
+            uint32_t object_count,
+            const uint32_t *attr_count,
+            const sai_attribute_t **attr_list,
+            sai_bulk_op_error_mode_t mode,
+            sai_object_id_t *object_id,
+            sai_status_t *object_statuses);
+    static sai_status_t remove_otn_wsss(
+            uint32_t object_count,
+            const sai_object_id_t *object_id,
+            sai_bulk_op_error_mode_t mode,
+            sai_status_t *object_statuses);
+    static sai_status_t set_otn_wsss_attribute(
+            uint32_t object_count,
+            const sai_object_id_t *object_id,
+            const sai_attribute_t *attr_list,
+            sai_bulk_op_error_mode_t mode,
+            sai_status_t *object_statuses);
+    static sai_status_t get_otn_wsss_attribute(
+            uint32_t object_count,
+            const sai_object_id_t *object_id,
+            const uint32_t *attr_count,
+            sai_attribute_t **attr_list,
+            sai_bulk_op_error_mode_t mode,
+            sai_status_t *object_statuses);
     static sai_status_t create_otn_wss_spec_power(
             sai_object_id_t *otn_wss_spec_power_id,
             sai_object_id_t switch_id,
@@ -177,10 +229,30 @@ public:
             sai_object_id_t otn_wss_spec_power_id,
             uint32_t attr_count,
             sai_attribute_t *attr_list);
+    static sai_status_t create_otn_wss_spec_powers(
+            sai_object_id_t switch_id,
+            uint32_t object_count,
+            const uint32_t *attr_count,
+            const sai_attribute_t **attr_list,
+            sai_bulk_op_error_mode_t mode,
+            sai_object_id_t *object_id,
+            sai_status_t *object_statuses);
+    static sai_status_t remove_otn_wss_spec_powers(
+            uint32_t object_count,
+            const sai_object_id_t *object_id,
+            sai_bulk_op_error_mode_t mode,
+            sai_status_t *object_statuses);
     static sai_status_t set_otn_wss_spec_powers_attribute(
             uint32_t object_count,
             const sai_object_id_t *object_id,
             const sai_attribute_t *attr_list,
+            sai_bulk_op_error_mode_t mode,
+            sai_status_t *object_statuses);
+    static sai_status_t get_otn_wss_spec_powers_attribute(
+            uint32_t object_count,
+            const sai_object_id_t *object_id,
+            const uint32_t *attr_count,
+            sai_attribute_t **attr_list,
             sai_bulk_op_error_mode_t mode,
             sai_status_t *object_statuses);
     // OTN OTDR scan type
@@ -241,14 +313,21 @@ public:
     static switch_metadata *switch_metadata_ptr;
 
     // api table
-    sai_switch_api_t switch_api;
-    sai_router_interface_api_t router_interface_api;
-    sai_otn_attenuator_api_t otn_attenuator_api;
-    sai_otn_oa_api_t otn_oa_api;
-    sai_otn_ocm_api_t otn_ocm_api;
-    sai_otn_osc_api_t otn_osc_api;
-    sai_otn_wss_api_t otn_wss_api;
-    sai_otn_otdr_api_t otn_otdr_api;
+    //
+    // Zero-initialized on purpose: sai_adapter is heap-allocated (see
+    // create_sai_adapter), so any method slot the constructor does not assign
+    // would otherwise hold heap garbage. syncd only null-checks the pointer it
+    // reads out of these tables, so a garbage slot becomes a wild call rather
+    // than a clean SAI_STATUS_NOT_SUPPORTED fallback. This matters whenever the
+    // SAI headers grow a method that this adapter has not implemented yet.
+    sai_switch_api_t switch_api{};
+    sai_router_interface_api_t router_interface_api{};
+    sai_otn_attenuator_api_t otn_attenuator_api{};
+    sai_otn_oa_api_t otn_oa_api{};
+    sai_otn_ocm_api_t otn_ocm_api{};
+    sai_otn_osc_api_t otn_osc_api{};
+    sai_otn_wss_api_t otn_wss_api{};
+    sai_otn_otdr_api_t otn_otdr_api{};
 
     /* Report an environmental / HAL alarm that has no SAI object of its own
      * (fan, temperature, power supply, ...). Routes through the normal SAI

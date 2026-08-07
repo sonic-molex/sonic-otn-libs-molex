@@ -26,7 +26,16 @@ do {\
     }\
 } while(0)
 
-#define CAST_OBJ(o, t, id) t *o = static_cast<t *>(switch_metadata_ptr->sai_id_map.get_object(id))
+/* An id that is not in the map is reachable, not just a programming error:
+ * orchagent keeps object ids that a failed create left unregistered here, and
+ * asks for their attributes afterwards. Return instead of handing the caller a
+ * null to dereference, which faults the whole syncd container. */
+#define CAST_OBJ(o, t, id) \
+t *o = static_cast<t *>(switch_metadata_ptr->sai_id_map.get_object(id));\
+if ((o) == nullptr) {\
+    logger::error(std::string(__func__) + ", unknown object id " + std::to_string(id));\
+    return SAI_STATUS_ITEM_NOT_FOUND;\
+}
 
 
 class sai_adapter

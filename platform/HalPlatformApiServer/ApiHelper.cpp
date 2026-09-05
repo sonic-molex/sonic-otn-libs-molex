@@ -944,8 +944,8 @@ ApiHelper::ComponentGetFwVer(std::string& _return, const std::string& name)
 
     
     /* module or component */
-    if (auto* module = ensure_virtual_device<virtual_module_device>(mgr, name))
-        _return = module->get_revision();
+    if (auto* component = ensure_virtual_device<virtual_component_device>(mgr, name))
+        _return = component->get_revision();
     else
         _return = DEF_COMPONENT_NAME_NA;
 

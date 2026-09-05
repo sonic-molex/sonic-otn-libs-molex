@@ -77,6 +77,19 @@ private:
     int slot;
 };
 
+class virtual_component_device : public virtual_device_base {
+public:
+    explicit virtual_component_device(const std::string& name)
+        : virtual_device_base(name), revision("1.0") {}
+    virtual ~virtual_component_device() = default;
+
+    const std::string& get_revision() const { return revision; }
+    void set_revision(const std::string& r) { revision = r; }
+
+private:
+    std::string revision;
+};
+
 class virtual_fan_device : public virtual_device_base {
 public:
     explicit virtual_fan_device(const std::string& name)
@@ -253,8 +266,17 @@ public:
           revision("1.0"),
           base_mac("00:1A:2B:3C:4D:5E"),
           slot(0),
-          state(Slot_State::OFFLINE),
-          type(Module_Type::MODULE_TYPE_NONE) {}
+          state(Slot_State::ONLINE),
+          type(Module_Type::MODULE_TYPE_FABRIC) {
+        const auto slot_pos = name.find_last_not_of("0123456789");
+        if (slot_pos + 1 < name.size())
+            slot = std::stoi(name.substr(slot_pos + 1));
+
+        if (name.compare(0, 10, "SUPERVISOR") == 0)
+            type = Module_Type::MODULE_TYPE_SUPERVISOR;
+        else if (name.compare(0, 9, "LINE-CARD") == 0)
+            type = Module_Type::MODULE_TYPE_LINECARD;
+    }
     virtual ~virtual_module_device() = default;
 
     enum class Module_Type
@@ -297,11 +319,6 @@ public:
         serial = serial + std::to_string(module_num);
         // just to change last digit of base_mac
         base_mac[base_mac.length() - 1] = std::to_string(module_num)[0];
-        slot = static_cast<int>(module_num);
-        state = (module_num % 3 == 0) ? Slot_State::OFFLINE : 
-                (module_num % 3 == 1) ? Slot_State::ONLINE : Slot_State::MISMATCH;
-        type = static_cast<Module_Type>((module_num % static_cast<int>(Module_Type::MODULE_TYPE_NONE) - 1) + 1);
-
     }
 
 private:

@@ -68,6 +68,7 @@ add_library(${TARGET} SHARED ${SRC_DIR}/logger.cpp
                              ${SRC_DIR}/sai_otn_device.cpp
                              ${SRC_DIR}/sai_otn_attenuator.cpp
                              ${SRC_DIR}/sai_otn_oa.cpp
+                             ${SRC_DIR}/sai_otn_ops.cpp
                              ${SRC_DIR}/sai_otn_ocm.cpp
                              ${SRC_DIR}/sai_otn_osc.cpp
                              ${SRC_DIR}/sai_otn_wss.cpp

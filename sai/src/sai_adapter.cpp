@@ -31,6 +31,11 @@ sai_adapter::sai_adapter()
     otn_oa_api.set_otn_oa_attribute = &sai_adapter::set_otn_oa_attribute;
     otn_oa_api.get_otn_oa_attribute = &sai_adapter::get_otn_oa_attribute;
 
+    otn_ops_api.create_otn_ops = &sai_adapter::create_otn_ops;
+    otn_ops_api.remove_otn_ops = &sai_adapter::remove_otn_ops;
+    otn_ops_api.set_otn_ops_attribute = &sai_adapter::set_otn_ops_attribute;
+    otn_ops_api.get_otn_ops_attribute = &sai_adapter::get_otn_ops_attribute;
+
     otn_ocm_api.create_otn_ocm = &sai_adapter::create_otn_ocm;
     otn_ocm_api.remove_otn_ocm = &sai_adapter::remove_otn_ocm;
     otn_ocm_api.set_otn_ocm_attribute = &sai_adapter::set_otn_ocm_attribute;
@@ -102,6 +107,9 @@ sai_adapter::sai_api_query(sai_api_t sai_api_id, void **api_method_table)
         break;
     case SAI_API_OTN_OA:
         *api_method_table = &otn_oa_api;
+        break;
+    case SAI_API_OTN_OPS:
+        *api_method_table = &otn_ops_api;
         break;
     case SAI_API_OTN_OCM:
         *api_method_table = &otn_ocm_api;

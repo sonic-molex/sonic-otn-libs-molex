@@ -116,6 +116,21 @@ public:
             uint32_t attr_count,
             sai_attribute_t *attr_list);
 
+    // OTN OPS
+    static sai_status_t create_otn_ops(
+            sai_object_id_t *otn_ops_id,
+            sai_object_id_t switch_id,
+            uint32_t attr_count,
+            const sai_attribute_t *attr_list);
+    static sai_status_t remove_otn_ops(sai_object_id_t otn_ops_id);
+    static sai_status_t set_otn_ops_attribute(
+            sai_object_id_t otn_ops_id,
+            const sai_attribute_t *attr);
+    static sai_status_t get_otn_ops_attribute(
+            sai_object_id_t otn_ops_id,
+            uint32_t attr_count,
+            sai_attribute_t *attr_list);
+
     // OTAI OCM
     static sai_status_t create_otn_ocm(
             sai_object_id_t *otn_ocm_id,
@@ -333,6 +348,7 @@ public:
     sai_router_interface_api_t router_interface_api{};
     sai_otn_attenuator_api_t otn_attenuator_api{};
     sai_otn_oa_api_t otn_oa_api{};
+    sai_otn_ops_api_t otn_ops_api{};
     sai_otn_ocm_api_t otn_ocm_api{};
     sai_otn_osc_api_t otn_osc_api{};
     sai_otn_wss_api_t otn_wss_api{};

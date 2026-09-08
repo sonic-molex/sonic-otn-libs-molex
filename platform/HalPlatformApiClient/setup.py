@@ -4,6 +4,7 @@ setup(
     name='libhalplatformclient-otn',
     version='1.0.0',
     description='Hal platform api thrift client for SONiC platform',
+    long_description='Hal platform API Thrift client for SONiC platform',
     license='Apache 2.0',
     author='Molex',
     author_email='lu.mao@molex.com',

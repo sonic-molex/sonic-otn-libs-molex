@@ -204,6 +204,43 @@ public:
     std::map<sai_uint64_t, sai_object_id_t> channels;
 };
 
+class otn_ops_obj : public otn_obj
+{
+public:
+    otn_ops_obj(sai_id_map_t &sai_id_map) :
+        otn_obj(sai_id_map, SAI_OBJECT_TYPE_OTN_OPS),
+        revertive(false),
+        wait_to_restore_time(300000),
+        hold_off_time(1),
+        primary_switch_threshold(-300),
+        primary_switch_hysteresis(150),
+        secondary_switch_threshold(-300),
+        relative_switch_threshold(0),
+        relative_switch_threshold_offset(0),
+        force_to_port(SAI_OTN_OPS_FORCE_TO_PORT_NONE),
+        active_path(SAI_OTN_OPS_ACTIVE_PATH_PRIMARY),
+        primary_in_enabled(true),
+        secondary_in_enabled(true),
+        common_in_enabled(true)
+    {
+    }
+
+    bool revertive;
+    uint32_t wait_to_restore_time;
+    uint32_t hold_off_time;
+    int32_t primary_switch_threshold;
+    int32_t primary_switch_hysteresis;
+    int32_t secondary_switch_threshold;
+    int32_t relative_switch_threshold;
+    int32_t relative_switch_threshold_offset;
+    int32_t force_to_port;
+    int32_t active_path;
+    bool primary_in_enabled;
+    bool secondary_in_enabled;
+    bool common_in_enabled;
+    std::map<sai_attr_id_t, int32_t> attenuations;
+};
+
 class otn_ocm_channel_obj : public otn_obj
 {
 public:

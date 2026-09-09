@@ -17,7 +17,8 @@ static const char *module[] = {
     "OTN_OA",
     "OTN_OCM",
     "OTN_OSC",
-    "OTN_OTDR"
+    "OTN_OTDR",
+    "OTN_OPS"
 };
 
 sai_status_t

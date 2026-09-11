@@ -1,4 +1,6 @@
 #include "virtual_otn_device.h"
+#include "dev_util.h"
+#include "otdr_scan_registry.h"
 #include <cstdlib>
 #include <cstdio>
 #include <thread>
@@ -97,33 +99,67 @@ sai_status_t virtual_otn_wss_device::remove_all_spec_power()
 
 
 /* OTDR Device */
-void virtual_otn_otdr_device::trigger_scan(
-        sai_object_id_t otdr_id,
-        sai_otn_otdr_scan_complete_notification_fn ntf_fn)
+std::string virtual_otn_otdr_device::get_module_name() const
 {
-    if (get_scanning_status() == SAI_OTN_OTDR_STATUS_MEASURING) {
-        logger::warn("virtual_otn_otdr_device::trigger_scan: scan already in progress, ignoring");
-        return;
+    return dev_util::get_module_name(get_name());
+}
+
+std::string virtual_otn_otdr_device::sor_temp_path(const std::string& instance)
+{
+    return "/host/otn/otdr-sors/.otdr_result_" + instance + ".sor";
+}
+
+sai_otn_otdr_status_t virtual_otn_otdr_device::get_scanning_status() const
+{
+    bool active = otdr_scan_registry::instance().is_active(get_module_name(), get_sai_object_id());
+    return active ? SAI_OTN_OTDR_STATUS_MEASURING : SAI_OTN_OTDR_STATUS_IDLE;
+}
+
+bool virtual_otn_otdr_device::cancel_scan()
+{
+    return otdr_scan_registry::instance().cancel(get_module_name(), get_sai_object_id());
+}
+
+sai_status_t virtual_otn_otdr_device::trigger_scan(
+        sai_object_id_t otdr_id,
+        sai_otn_otdr_scan_complete_notification_fn ntf_fn,
+        std::string* busy_name)
+{
+    const std::string name = get_name();
+    const std::string module = get_module_name();
+
+    auto acquired = otdr_scan_registry::instance().acquire(module, otdr_id, name);
+    if (acquired.status != SAI_STATUS_SUCCESS) {
+        if (busy_name) {
+            *busy_name = acquired.busy_name;
+        }
+        return acquired.status;
     }
 
-    uint32_t acq_time = get_acquisition_time_s();
+    const uint32_t acq_time = get_acquisition_time_s();
+    const uint64_t generation = acquired.generation;
+    const std::string sor_path = sor_temp_path(name);
     logger::notice("virtual_otn_otdr_device::trigger_scan: starting scan thread, otdr_id=" +
-                   std::to_string(otdr_id) + " acquisition_time=" + std::to_string(acq_time) + "s");
+                   std::to_string(otdr_id) + " module=" + module +
+                   " acquisition_time=" + std::to_string(acq_time) + "s");
 
-    set_scanning_status(SAI_OTN_OTDR_STATUS_MEASURING);
-
-    std::thread([this, otdr_id, acq_time, ntf_fn]() {
-        logger::notice("virtual_otn_otdr_device scan thread: sleeping " + std::to_string(acq_time) + "s");
+    // The thread captures values only: the device may be removed while it sleeps
+    std::thread([otdr_id, generation, module, name, acq_time, sor_path, ntf_fn]() {
+        logger::notice("virtual_otn_otdr_device scan thread: " + name + " sleeping " + std::to_string(acq_time) + "s");
         std::this_thread::sleep_for(std::chrono::seconds(acq_time));
-        logger::notice("virtual_otn_otdr_device scan thread: awoke, preparing SOR file and result");
 
-        const char *sorSrc = "/host/otn/otdr-sors/.otdr_result.sor";
-        FILE *fdst = fopen(sorSrc, "wb");
+        // The slot is released before the callback fires, so a following STATUS read sees IDLE
+        if (!otdr_scan_registry::instance().complete(module, otdr_id, generation)) {
+            logger::notice("virtual_otn_otdr_device scan thread: " + name + " scan cancelled or superseded, dropping completion");
+            return;
+        }
+
+        FILE *fdst = fopen(sor_path.c_str(), "wb");
         if (fdst) {
             fclose(fdst);
-            logger::notice(std::string("virtual_otn_otdr_device scan thread: empty SOR created at ") + sorSrc);
+            logger::notice("virtual_otn_otdr_device scan thread: empty SOR created at " + sor_path);
         } else {
-            logger::warn(std::string("virtual_otn_otdr_device scan thread: cannot create SOR at ") + sorSrc);
+            logger::warn("virtual_otn_otdr_device scan thread: cannot create SOR at " + sor_path);
         }
 
         // Synthetic scan result with 3 events
@@ -152,9 +188,6 @@ void virtual_otn_otdr_device::trigger_scan(
         result.event_count     = 3;
         result.events          = events;
 
-        set_scanning_status(SAI_OTN_OTDR_STATUS_IDLE);
-        logger::notice("virtual_otn_otdr_device scan thread: status set to IDLE");
-
         if (ntf_fn) {
             logger::notice("virtual_otn_otdr_device scan thread: firing scan-complete callback, otdr_id=" +
                            std::to_string(otdr_id));
@@ -164,5 +197,7 @@ void virtual_otn_otdr_device::trigger_scan(
             logger::warn("virtual_otn_otdr_device scan thread: no callback registered, dropping notification");
         }
     }).detach();
+
+    return SAI_STATUS_SUCCESS;
 }
 

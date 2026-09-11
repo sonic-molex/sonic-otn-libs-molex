@@ -218,16 +218,21 @@ sai_adapter::set_otn_otdr_attribute(sai_object_id_t otn_otdr_id,
     {
         sai_otn_otdr_operation_t op = (sai_otn_otdr_operation_t)attr->value.u32;
         if (op == SAI_OTN_OTDR_OPERATION_CANCEL) {
-            logger::notice(std::string(__func__) + ", CANCEL: setting status to IDLE");
-            otdr_dev->set_scanning_status(SAI_OTN_OTDR_STATUS_IDLE);
-        } else {
-            if (otdr_dev->get_scanning_status() == SAI_OTN_OTDR_STATUS_MEASURING) {
-                logger::notice(std::string(__func__) + ", scan already in progress, rejecting");
-                return SAI_STATUS_FAILURE;
-            }
+            bool cancelled = otdr_dev->cancel_scan();
+            logger::notice(std::string(__func__) + (cancelled ? ", CANCEL: scan cancelled on " : ", CANCEL: no active scan on ") + obj->name);
+        } else if (op == SAI_OTN_OTDR_OPERATION_TRIGGER) {
             apply_scan_config(otdr_dev, obj->parent_port, otdr_dev->get_scan_type());
-            otdr_dev->trigger_scan(obj->sai_object_id,
-                                   switch_metadata_ptr->otn_otdr_scan_complete_ntf);
+            std::string busy_name;
+            sai_status_t st = otdr_dev->trigger_scan(obj->sai_object_id,
+                                                     switch_metadata_ptr->otn_otdr_scan_complete_ntf,
+                                                     &busy_name);
+            if (st != SAI_STATUS_SUCCESS) {
+                logger::notice(std::string(__func__) + ", TRIGGER rejected: " + otdr_dev->get_module_name() + " busy with " + busy_name);
+                return st;
+            }
+        } else {
+            logger::warn(std::string(__func__) + ", unsupported otn otdr operation " + std::to_string(attr->value.u32));
+            return SAI_STATUS_INVALID_ATTR_VALUE_0;
         }
         break;
     }

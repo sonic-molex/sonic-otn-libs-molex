@@ -30,6 +30,7 @@ public:
     const std::string& get_name() const { return attr_name; }
 
     sai_object_type_extensions_t get_sai_object_type() const { return en_sai_object_type; }
+    sai_object_id_t get_sai_object_id() const { return sai_object_id; }
 
     /* Active-alarm tracking for RAISE/CLEAR edge detection.
      * HAL/device alarm conditions are level/state (active or not); eventd wants
@@ -510,13 +511,13 @@ public:
           backscatter_index(-8100),
           reflectance_threshold(-4000),
           splice_loss_threshold(35),
-          fiber_end_threshold(300),
-          scanning_status(SAI_OTN_OTDR_STATUS_IDLE)
+          fiber_end_threshold(300)
     {
         logger::debug(std::string(__func__) + ", OTDR Device created with ID " + std::to_string(id));
     }
 
-    virtual ~virtual_otn_otdr_device() {}
+    // Removing an instance mid-scan frees its slot and drops the pending completion
+    virtual ~virtual_otn_otdr_device() { cancel_scan(); }
 
     // Setters
     void set_parent_port(const std::string& port)     { parent_port = port; }
@@ -533,10 +534,15 @@ public:
     void set_reflectance_threshold(sai_int32_t v)     { reflectance_threshold = v; }
     void set_splice_loss_threshold(sai_int32_t v)     { splice_loss_threshold = v; }
     void set_fiber_end_threshold(sai_int32_t v)       { fiber_end_threshold = v; }
-    void set_scanning_status(sai_otn_otdr_status_t v) { scanning_status = v; }
 
-    // Launch a background scan thread: sleeps acquisition_time_s, copies SOR file, fires ntf_fn
-    void trigger_scan(sai_object_id_t otdr_id, sai_otn_otdr_scan_complete_notification_fn ntf_fn);
+    // Acquires the slot and launches the scan thread; SAI_STATUS_OBJECT_IN_USE when the slot is busy (busy_name = holder)
+    sai_status_t trigger_scan(sai_object_id_t otdr_id, sai_otn_otdr_scan_complete_notification_fn ntf_fn, std::string* busy_name);
+    // Releases the slot if this instance holds it; its pending completion is then dropped
+    bool cancel_scan();
+    // "OTDR1-2" -> "OTDR1": the slot owning the single physical OTDR
+    std::string get_module_name() const;
+    // Per-instance temp SOR written by the scan thread and renamed by orchagent
+    static std::string sor_temp_path(const std::string& instance);
 
     // Getters
     const std::string& get_parent_port() const        { return parent_port; }
@@ -553,7 +559,8 @@ public:
     sai_int32_t get_reflectance_threshold() const          { return reflectance_threshold; }
     sai_int32_t get_splice_loss_threshold() const          { return splice_loss_threshold; }
     sai_int32_t get_fiber_end_threshold() const            { return fiber_end_threshold; }
-    sai_otn_otdr_status_t get_scanning_status() const          { return scanning_status; }
+    // MEASURING while this instance owns its slot's scan, IDLE otherwise (siblings stay IDLE)
+    sai_otn_otdr_status_t get_scanning_status() const;
 
 private:
     std::string  parent_port;
@@ -570,5 +577,4 @@ private:
     sai_int32_t       reflectance_threshold;
     sai_int32_t       splice_loss_threshold;
     sai_int32_t       fiber_end_threshold;
-    sai_otn_otdr_status_t scanning_status;   // 0 = idle (simulated)
 };

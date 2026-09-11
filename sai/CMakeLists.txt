@@ -74,6 +74,7 @@ add_library(${TARGET} SHARED ${SRC_DIR}/logger.cpp
                              ${SRC_DIR}/sai_otn_otdr.cpp
                              ${SRC_DIR}/sai_otn_otdr_scan_type.cpp
                              ${SRC_DIR}/otdr_static_config.cpp
+                             ${SRC_DIR}/otdr_scan_registry.cpp
                              ${SRC_DIR}/sai_adapter.cpp
                              ${SRC_DIR}/sai_adapter_interface.cpp
                              ${SRC_DIR}/virtual_otn_device.cpp
@@ -92,7 +93,7 @@ target_link_libraries(${TEST} sai)
 
 #debian
 set(MAJAR_VERSION 1)
-set(MINOR_VERSION 7)
+set(MINOR_VERSION 8)
 set(PATCH_VERSION 0)
 set(CPACK_GENERATOR "DEB")
 set(CPACK_PACKAGE_VERSION_MAJOR "${MAJAR_VERSION}")

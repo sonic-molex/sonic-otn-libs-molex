@@ -104,3 +104,15 @@ dev_util::get_sub_index(const std::string &name)
 
     return 0;
 }
+
+std::string
+dev_util::get_module_name(const std::string &name)
+{
+    auto pipe = name.find('|');
+    std::string key = (pipe == std::string::npos) ? name : name.substr(0, pipe);
+    auto dash = key.rfind('-');
+    if (dash == std::string::npos || dash == 0) {
+        return key;
+    }
+    return key.substr(0, dash);
+}

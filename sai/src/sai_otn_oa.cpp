@@ -73,9 +73,10 @@ sai_adapter::set_otn_oa_attribute(sai_object_id_t otn_oa_id,
         obj->dev_name = name;
         obj->dev_type = dev_util::get_dev_type(name);
 
-        // TODO, set port name by name instead of reading from module
-        obj->ingress_port = name + "-IN";
-        obj->egress_port = name + "-OUT";
+        if (!dev_util::get_oa_ports(name, obj->ingress_port, obj->egress_port)) {
+            obj->ingress_port = name + "-IN";
+            obj->egress_port = name + "-OUT";
+        }
 
         // set name and port names in virtual device (get reads from oa_dev)
         oa_dev->set_name(name);

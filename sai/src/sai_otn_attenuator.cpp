@@ -73,9 +73,10 @@ sai_adapter::set_otn_attenuator_attribute(sai_object_id_t otn_attenuator_id,
         obj->dev_name = name;
         obj->dev_type = dev_util::get_dev_type(name);
 
-        // TODO, set port name by name instead of reading from module
-        obj->ingress_port = name + "-IN";
-        obj->egress_port = name + "-OUT";
+        if (!dev_util::get_voa_ports(name, obj->ingress_port, obj->egress_port)) {
+            obj->ingress_port = name + "-IN";
+            obj->egress_port = name + "-OUT";
+        }
 
         voa_dev->set_name(name);
         voa_dev->set_ingress_port(obj->ingress_port);
